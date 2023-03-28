@@ -1,0 +1,43 @@
+.root{
+    -fx-font-family : 'sans-serif';
+    -fx-font-size : 14;
+}
+.label{
+
+    -fx-padding: 10;
+    -fx-alignment: center;
+}
+.containers{
+    -fx-spacing: 10;
+    -fx-padding: 10;
+}
+.hbox{
+    -fx-alignment: center-left;
+}
+.top-hbox{
+    -fx-background-color: silver;
+}
+.button{
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.button:hover{
+    -fx-background-color: lightblue;
+    -fx-border-color: lightskyblue;
+}
+.menu .label {
+    -fx-padding: 0;
+}
+.text-field{
+    -fx-pref-width: 75;
+
+}
+.task-grid-pane{
+    -fx-max-width: none ;
+    -fx-max-height: none;
+    -fx-column-halignment: center;
+    -fx-row-valignment: center;
+}
+.left-vbox{
+    -fx-background-color: lightgrey;
+}

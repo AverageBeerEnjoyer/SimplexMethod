@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="820.0" prefWidth="984.0" stylesheets="@css/main-scene.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.ac.uniyar.katkov.simplexmethod.controllers.scenes.MainSceneController">
+    <top>
+        <MenuBar prefHeight="8.0" prefWidth="984.0" BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab text="Simplex method">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="112.0" prefWidth="984.0">
+                           <children>
+                              <Label text="Dimension" />
+                              <GridPane>
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Rows" />
+                                    <Label text="Cols" GridPane.rowIndex="1" />
+                                    <Spinner fx:id="rows" GridPane.columnIndex="1" />
+                                    <Spinner fx:id="cols" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                              <Button mnemonicParsing="false" onAction="#changeDimension" text="Apply" />
+                           </children>
+                           <styleClass>
+                              <String fx:value="containers" />
+                              <String fx:value="top-hbox" />
+                              <String fx:value="hbox" />
+                           </styleClass>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefHeight="660.0" prefWidth="188.0">
+                                 <children>
+                                    <Label text="Fractions:" />
+                                    <RadioButton fx:id="ordinary" mnemonicParsing="false" text="Ordinary" />
+                                    <RadioButton fx:id="decimal" mnemonicParsing="false" text="Decimal" />
+                                    <Button mnemonicParsing="false" prefHeight="62.0" prefWidth="98.0" text="Solve">
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                       <VBox.margin>
+                                          <Insets top="50.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                 </children>
+                                 <styleClass>
+                                    <String fx:value="containers" />
+                                    <String fx:value="left-vbox" />
+                                 </styleClass>
+                              </VBox>
+                              <Pane fx:id="forTask" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="845.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </content>
+                </Tab>
+                <Tab text="Graphic method">
+                    <content>
+                        <SplitPane dividerPositions="0.23373983739837398" prefHeight="160.0" prefWidth="200.0">
+                            <items>
+                                <VBox prefHeight="766.0" prefWidth="808.0" />
+                                <Pane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <LineChart prefHeight="766.0" prefWidth="752.0">
+                                            <xAxis>
+                                                <CategoryAxis side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                                <NumberAxis side="LEFT" />
+                                            </yAxis>
+                                        </LineChart>
+                                    </children>
+                                </Pane>
+                            </items>
+                        </SplitPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+</BorderPane>
