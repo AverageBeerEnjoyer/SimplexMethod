@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.*;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.Task;
 
 import java.net.URL;
@@ -60,13 +59,15 @@ public class MainSceneController implements Initializable {
         changeDimension();
     }
 
+    @FXML
     private void createTask() {
-        Class<? extends Num<? extends Number>> c;
+        Task<? extends Num<?>> task;
         if (ordinary.isSelected()) {
-            c = OrdinaryFraction.class;
+            task = NumberParser.createOFTaskFromGrid(taskGrid, rows.getValue(), cols.getValue());
         } else {
-            c = Doubl.class;
+            task = NumberParser.createDoubleTaskFromGrid(taskGrid, rows.getValue(), cols.getValue());
         }
-        Task<? extends Num<? extends Number>> task =NumberParser.taskFromGrid(c, taskGrid, rows.getValue(), cols.getValue())
+        task.solve();
+        task.printSolution();
     }
 }

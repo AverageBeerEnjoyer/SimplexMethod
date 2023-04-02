@@ -1,10 +1,12 @@
 package ru.ac.uniyar.katkov.simplexmethod.math;
 
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 
 
 
 public class Matrix<T extends Num<T>> implements Cloneable{
+    private final Arithmetic<T> ametic;
     public final int rows, columns;
     private final int[] order;
     private final T[][] numbers;
@@ -12,6 +14,7 @@ public class Matrix<T extends Num<T>> implements Cloneable{
 
     public Matrix(T[][] numbers, T[] extension) {
         if (numbers.length < 1 || numbers[0].length < 1) throw new IllegalArgumentException("empty matrix");
+        this.ametic = Arithmetic.getArithmeticOfType(extension[0]);
         this.numbers = numbers;
         this.rows = numbers.length;
         this.columns = numbers[0].length;
@@ -24,20 +27,20 @@ public class Matrix<T extends Num<T>> implements Cloneable{
 
     public void multiplyRow(int rowNum, T c) {
         for (int i = 0; i < columns; ++i) {
-            numbers[rowNum][i] = numbers[rowNum][i].multiply(c);
+            numbers[rowNum][i] = ametic.multiply(numbers[rowNum][i],c);
         }
-        extension[rowNum] = extension[rowNum].multiply(c);
+        extension[rowNum] = ametic.multiply(extension[rowNum],c);
     }
 
     public void addRowtoRow(int targetRow, int additionalRow, T multiplyCoef) {
         for (int i = 0; i < columns; ++i) {
             T a = numbers[targetRow][i];
             T b = numbers[additionalRow][i];
-            numbers[targetRow][i] = a.plus(b.multiply(multiplyCoef));
+            numbers[targetRow][i] = ametic.plus(a,ametic.multiply(b,multiplyCoef));
         }
         T a = extension[targetRow];
         T b = extension[additionalRow];
-        extension[targetRow] = a.plus(extension[additionalRow].multiply(multiplyCoef));
+        extension[targetRow] = ametic.plus(a,ametic.multiply(b, multiplyCoef));
     }
 
     public void swapRows(int row1, int row2) {

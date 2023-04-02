@@ -34,7 +34,7 @@ public class TablesFactory {
         for (ColumnConstraints col : taskTable.getColumnConstraints()) {
             col.setPrefWidth(75);
         }
-        taskTable.setGridLinesVisible(true);
+//        taskTable.setGridLinesVisible(true);
         return taskTable;
 
     }

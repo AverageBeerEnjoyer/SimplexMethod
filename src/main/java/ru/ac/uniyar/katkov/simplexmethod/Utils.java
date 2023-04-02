@@ -1,9 +1,5 @@
 package ru.ac.uniyar.katkov.simplexmethod;
 
-import javafx.scene.Node;
-import javafx.scene.layout.GridPane;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction;
-
 public class Utils {
     public static <T extends Comparable<T>> int findPosOfMinEl(T[] ar){
         T min;
@@ -28,12 +24,5 @@ public class Utils {
             }
         }
         return col;
-    }
-    public static Node getFromGridRowCol(int row, int col, GridPane gridPane){
-        for(Node child: gridPane.getChildren()){
-            if(GridPane.getRowIndex(child)==row && GridPane.getColumnIndex(child)==col)
-                return child;
-        }
-        return null;
     }
 }

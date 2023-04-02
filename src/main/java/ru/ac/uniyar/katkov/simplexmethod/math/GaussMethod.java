@@ -1,5 +1,6 @@
 package ru.ac.uniyar.katkov.simplexmethod.math;
 
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 
 import static ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction.*;
@@ -57,14 +58,16 @@ public class GaussMethod<T extends Num<T>> {
     }
 
     private void normalizeRow(Matrix<T> matrix,int row, int column) {
-        T coef = matrix.get(row, column).flip();
+        Arithmetic<T> ametic = Arithmetic.getArithmeticOfType(matrix.get(0,0));
+        T coef = ametic.flip(matrix.get(row, column));
         matrix.multiplyRow(row, coef);
     }
 
     private void excludeVarFromColumn(Matrix<T> matrix, int row, int column) {
+        Arithmetic<T> ametic = Arithmetic.getArithmeticOfType(matrix.get(0,0));
         for (int i = 0; i < matrix.rows; ++i) {
             if (i == row) continue;
-            T coef = (matrix.get(i, column).divide(matrix.get(row, column))).revert();
+            T coef = ametic.divide(matrix.get(i, column), ametic.revert(matrix.get(row, column)));
             matrix.addRowtoRow(i, row, coef);
         }
     }

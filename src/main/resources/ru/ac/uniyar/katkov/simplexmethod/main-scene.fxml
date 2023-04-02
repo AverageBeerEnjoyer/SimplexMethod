@@ -86,7 +86,7 @@
                                     <Label text="Fractions:" />
                                     <RadioButton fx:id="ordinary" mnemonicParsing="false" text="Ordinary" />
                                     <RadioButton fx:id="decimal" mnemonicParsing="false" text="Decimal" />
-                                    <Button mnemonicParsing="false" prefHeight="62.0" prefWidth="98.0" text="Solve">
+                                    <Button mnemonicParsing="false" onAction="#createTask" prefHeight="62.0" prefWidth="98.0" text="Solve">
                                        <opaqueInsets>
                                           <Insets />
                                        </opaqueInsets>

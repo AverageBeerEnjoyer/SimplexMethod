@@ -3,6 +3,7 @@ package ru.ac.uniyar.katkov.simplexmethod.math.simplex;
 import javafx.util.Pair;
 import ru.ac.uniyar.katkov.simplexmethod.math.GaussMethod;
 import ru.ac.uniyar.katkov.simplexmethod.Utils;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 
@@ -12,12 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class SimplexTable<T extends Num<T>> {
+    Arithmetic<T> ametic;
     private final T[] func;
     private final Matrix<T> matrix;
     private List<T> vector;
     private SimplexTableCondition condition;
 
     public SimplexTable(T[] func, Matrix<T> matrix) {
+        this.ametic = Arithmetic.getArithmeticOfType(func[0]);
         this.func = func;
         this.matrix = matrix;
         basicVariables();
@@ -35,10 +38,10 @@ public class SimplexTable<T extends Num<T>> {
         int[] order = matrix.getOrder();
         for (int i = 0; i < matrix.rows; ++i) {
             for (int j = matrix.rows; j < matrix.columns; ++j) {
-                func[order[j]] = func[order[j]].minus(func[order[i]].multiply(matrix.get(i, j)));
+                func[order[j]] = ametic.minus(func[order[j]], ametic.multiply(func[order[i]],matrix.get(i, j)));
             }
-            func[matrix.columns] = func[matrix.columns].minus(func[order[i]].multiply(matrix.getExt(i)));
-            func[order[i]] = func[order[i]].zero();
+            func[matrix.columns] = ametic.minus(func[matrix.columns], ametic.multiply(func[order[i]], matrix.getExt(i)));
+            func[order[i]] = ametic.zero();
 
         }
     }
@@ -46,13 +49,13 @@ public class SimplexTable<T extends Num<T>> {
     private void countVector() {
         this.vector = new ArrayList<>(matrix.columns);
         for(int i = 0;i<matrix.columns;++i){
-            vector.add(matrix.get(0,0).zero());
+            vector.add(ametic.zero());
         }
         for (int i = 0; i < matrix.rows; ++i) {
             vector.set(matrix.getOrder()[i],matrix.getExt(i));
         }
         for (int i = matrix.rows; i < matrix.columns; ++i) {
-            vector.set(matrix.getOrder()[i],matrix.get(0,0).zero());
+            vector.set(matrix.getOrder()[i],ametic.zero());
         }
     }
 
@@ -61,10 +64,10 @@ public class SimplexTable<T extends Num<T>> {
         boolean finalTable = true;
         int[] order = matrix.getOrder();
         for (int i = matrix.rows; i < matrix.columns; ++i) {
-            if (func[order[i]].compareTo(func[order[i]].zero()) < 0) {
+            if (func[order[i]].compareTo(ametic.zero()) < 0) {
                 finalTable = false;
                 for (int j = 0; j < matrix.rows; ++j) {
-                    if (matrix.get(j, i).compareTo(matrix.get(j,i).zero()) > 0) {
+                    if (matrix.get(j, i).compareTo(ametic.zero()) > 0) {
                         noLimit = false;
                         break;
                     }
@@ -97,18 +100,18 @@ public class SimplexTable<T extends Num<T>> {
         Matrix<T> matrix = this.matrix.clone();
         Pair<Integer, Integer> swap = choseSwapElements();
         matrix.swapColumns(swap.getKey(), swap.getValue());
-        return new SimplexTable<T>(function, matrix);
+        return new SimplexTable<>(function, matrix);
     }
 
     private int choseRowToSwap(int colToSwap) {
         int rowToSwap = -1;
-        T max = matrix.get(0,0).zero();
+        T max = ametic.zero();
         for (int i = 0; i < matrix.rows; ++i) {
             T el = matrix.get(i, colToSwap);
-            if (el.compareTo(el.zero()) < 0) continue;
+            if (el.compareTo(ametic.zero()) < 0) continue;
             T ext = matrix.getExt(i);
             if (ext.isZero()) return i;
-            el = el.divide(ext);
+            el = ametic.divide(el, ext);
             if (el.compareTo(max) > 0) {
                 max = el;
                 rowToSwap = i;

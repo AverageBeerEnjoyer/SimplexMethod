@@ -1,5 +1,6 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.simplex;
 
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 
@@ -9,6 +10,7 @@ import java.util.Optional;
 
 
 public class Task<T extends Num<T>> {
+    private final Arithmetic<T> ametic;
     private T[] targetFunction;
     private Matrix<T> limits;
     private List<SimplexTable<T>> steps;
@@ -16,6 +18,7 @@ public class Task<T extends Num<T>> {
     private TaskCondition condition;
 
     public Task(T[] targetFunction, Matrix<T> limits){
+        this.ametic = Arithmetic.getArithmeticOfType(targetFunction[0]);
         this.targetFunction = targetFunction;
         this.limits = limits;
         this.condition = TaskCondition.NOT_SOLVED;
@@ -50,11 +53,11 @@ public class Task<T extends Num<T>> {
         for (T t : solution) {
             System.out.println(t.toString());
         }
-        T f=limits.get(0,0).zero();
+        T f=ametic.zero();
         for(int i=0;i< solution.size();++i){
-            f = f.plus(solution.get(i).multiply(targetFunction[i]));
+            f = ametic.plus(f, ametic.multiply(solution.get(i),targetFunction[i]));
         }
-        f = f.plus(targetFunction[targetFunction.length-1]);
+        f = ametic.plus(f,targetFunction[targetFunction.length-1]);
         System.out.println("function falue: "+f);
     }
 
