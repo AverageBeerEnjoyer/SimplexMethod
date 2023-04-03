@@ -3,6 +3,7 @@ package ru.ac.uniyar.katkov.simplexmethod.math.simplex;
 import org.junit.jupiter.api.Test;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
+import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 
 import static ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction.OF;
 import static ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction.ZERO;

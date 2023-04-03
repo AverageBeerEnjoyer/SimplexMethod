@@ -1,8 +1,11 @@
-package ru.ac.uniyar.katkov.simplexmethod.math.simplex;
+package ru.ac.uniyar.katkov.simplexmethod.math.simplex.task;
 
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
+import ru.ac.uniyar.katkov.simplexmethod.math.simplex.SimplexTableCondition;
+import ru.ac.uniyar.katkov.simplexmethod.math.simplex.TaskCondition;
+import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,7 @@ import java.util.Optional;
 
 
 public class Task<T extends Num<T>> {
+
     private final Arithmetic<T> ametic;
     private T[] targetFunction;
     private Matrix<T> limits;

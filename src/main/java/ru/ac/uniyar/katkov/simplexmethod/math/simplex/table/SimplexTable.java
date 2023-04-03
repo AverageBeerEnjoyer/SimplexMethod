@@ -1,4 +1,4 @@
-package ru.ac.uniyar.katkov.simplexmethod.math.simplex;
+package ru.ac.uniyar.katkov.simplexmethod.math.simplex.table;
 
 import javafx.util.Pair;
 import ru.ac.uniyar.katkov.simplexmethod.math.GaussMethod;
@@ -6,6 +6,7 @@ import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
+import ru.ac.uniyar.katkov.simplexmethod.math.simplex.SimplexTableCondition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,11 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class SimplexTable<T extends Num<T>> {
-    Arithmetic<T> ametic;
-    private final T[] func;
-    private final Matrix<T> matrix;
-    private List<T> vector;
-    private SimplexTableCondition condition;
+    protected Arithmetic<T> ametic;
+    protected final T[] func;
+    protected final Matrix<T> matrix;
+    protected List<T> vector;
+    protected SimplexTableCondition condition;
 
     public SimplexTable(T[] func, Matrix<T> matrix) {
         this.ametic = Arithmetic.getArithmeticOfType(func[0]);
@@ -29,7 +30,7 @@ public class SimplexTable<T extends Num<T>> {
         defineCondition();
     }
 
-    private void basicVariables() {
+    protected void basicVariables() {
         GaussMethod<T> gauss = new GaussMethod<>();
         gauss.solveWithColSwaps(matrix);
     }
@@ -42,7 +43,6 @@ public class SimplexTable<T extends Num<T>> {
             }
             func[matrix.columns] = ametic.minus(func[matrix.columns], ametic.multiply(func[order[i]], matrix.getExt(i)));
             func[order[i]] = ametic.zero();
-
         }
     }
 
@@ -102,7 +102,6 @@ public class SimplexTable<T extends Num<T>> {
         matrix.swapColumns(swap.getKey(), swap.getValue());
         return new SimplexTable<>(function, matrix);
     }
-
     private int choseRowToSwap(int colToSwap) {
         int rowToSwap = -1;
         T max = ametic.zero();
@@ -119,9 +118,11 @@ public class SimplexTable<T extends Num<T>> {
         }
         return rowToSwap;
     }
-
-    private Pair<Integer, Integer> choseSwapElements() {
-        int colToSwap = Utils.findPosOfMinEl(Arrays.copyOf(func, func.length - 1));
+    private int choseColToSwap(){
+        return Utils.findPosOfMinEl(Arrays.copyOf(func, func.length - 1));
+    }
+    protected Pair<Integer, Integer> choseSwapElements() {
+        int colToSwap = choseColToSwap();
         int rowToSwap = choseRowToSwap(colToSwap);
         return new Pair<>(rowToSwap, colToSwap);
     }

@@ -12,10 +12,10 @@ public class Alerts {
     }
     public static void showCriticalError(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText("Something bad happened...");
+        alert.setHeaderText("Something bad happened...\nPress FINISH to close this scary window");
         alert.getButtonTypes().clear();
         alert.getButtonTypes().add(ButtonType.FINISH);
-        alert.show();
+        alert.showAndWait();
         Platform.exit();
     }
 }

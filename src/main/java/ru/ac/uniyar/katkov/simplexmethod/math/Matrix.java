@@ -4,8 +4,7 @@ import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 
 
-
-public class Matrix<T extends Num<T>> implements Cloneable{
+public class Matrix<T extends Num<T>> implements Cloneable {
     private final Arithmetic<T> ametic;
     public final int rows, columns;
     private final int[] order;
@@ -27,20 +26,20 @@ public class Matrix<T extends Num<T>> implements Cloneable{
 
     public void multiplyRow(int rowNum, T c) {
         for (int i = 0; i < columns; ++i) {
-            numbers[rowNum][i] = ametic.multiply(numbers[rowNum][i],c);
+            numbers[rowNum][i] = ametic.multiply(numbers[rowNum][i], c);
         }
-        extension[rowNum] = ametic.multiply(extension[rowNum],c);
+        extension[rowNum] = ametic.multiply(extension[rowNum], c);
     }
 
     public void addRowtoRow(int targetRow, int additionalRow, T multiplyCoef) {
         for (int i = 0; i < columns; ++i) {
             T a = numbers[targetRow][i];
             T b = numbers[additionalRow][i];
-            numbers[targetRow][i] = ametic.plus(a,ametic.multiply(b,multiplyCoef));
+            numbers[targetRow][i] = ametic.plus(a, ametic.multiply(b, multiplyCoef));
         }
         T a = extension[targetRow];
         T b = extension[additionalRow];
-        extension[targetRow] = ametic.plus(a,ametic.multiply(b, multiplyCoef));
+        extension[targetRow] = ametic.plus(a, ametic.multiply(b, multiplyCoef));
     }
 
     public void swapRows(int row1, int row2) {
@@ -67,22 +66,30 @@ public class Matrix<T extends Num<T>> implements Cloneable{
         order[col2] = c;
     }
 
-    public boolean isDiagonal(){
-        for(int i=0;i<rows;++i){
-            for (int j=0;j<rows;++j){
-                if(j==i){
-                    if(numbers[i][j].isZero()) return false;
-                }else {
-                    if(!numbers[i][j].isZero()) return false;
+    public boolean isDiagonal() {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < rows; ++j) {
+                if (j == i) {
+                    if (numbers[i][j].isZero()) return false;
+                } else {
+                    if (!numbers[i][j].isZero()) return false;
                 }
             }
         }
         return true;
     }
 
-    public boolean hasZeroOnMainDiagonal(){
-        for(int i=0;i<rows;++i){
-            if(numbers[i][i].isZero()) return true;
+    public void prepareToABM() {
+        for (int i = 0; i < rows; ++i) {
+            if(extension[i].compareTo(ametic.zero())<0){
+                multiplyRow(i,ametic.parse("-1"));
+            }
+        }
+    }
+
+    public boolean hasZeroOnMainDiagonal() {
+        for (int i = 0; i < rows; ++i) {
+            if (numbers[i][i].isZero()) return true;
         }
         return false;
     }
@@ -111,7 +118,7 @@ public class Matrix<T extends Num<T>> implements Cloneable{
         }
     }
 
-    public int[] getOrder(){
+    public int[] getOrder() {
         return order;
     }
 
@@ -134,7 +141,7 @@ public class Matrix<T extends Num<T>> implements Cloneable{
     public Matrix<T> clone() {
         try {
             return (Matrix<T>) super.clone();
-        } catch (CloneNotSupportedException|ClassCastException e) {
+        } catch (CloneNotSupportedException | ClassCastException e) {
             throw new AssertionError();
         }
     }
