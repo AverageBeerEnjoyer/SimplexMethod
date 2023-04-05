@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
+import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
 
 import static ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction.OF;
 import static ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction.ZERO;
@@ -32,6 +33,91 @@ public class TaskTest {
         ext[1] = OF(1,1);
 
         Task<OrdinaryFraction> task = new Task<>(func, new Matrix<>(limits,ext));
+        task.solve();
+        task.printSolution();
+    }
+    @Test
+    void simpleNotSolvableABMTask(){
+        OrdinaryFraction[] func = new OrdinaryFraction[8];
+        func[0]= OF(0,1);
+        func[1] = OF(0,1);
+        func[2] = OF(0,1);
+        func[3] = OF(0,1);
+        func[4] = OF(1,1);
+        func[5] = OF(1,1);
+        func[6] = OF(1,1);
+        func[7] = ZERO;
+        OrdinaryFraction[][] limits = new OrdinaryFraction[3][7];
+
+        limits[0][0] = OF(1,1);
+        limits[0][1] = OF(0,1);
+        limits[0][2] = OF(0,1);
+        limits[0][3] = OF(1,1);
+        limits[0][4] = OF(2,1);
+        limits[0][5] = OF(-1,1);
+        limits[0][6] = OF(-1,1);
+
+        limits[1][0] = OF(0,1);
+        limits[1][1] = OF(1,1);
+        limits[1][2] = OF(0,1);
+        limits[1][3] = OF(-1,1);
+        limits[1][4] = OF(2,1);
+        limits[1][5] = OF(3,1);
+        limits[1][6] = OF(1,1);
+
+        limits[2][0] = OF(0,1);
+        limits[2][1] = OF(0,1);
+        limits[2][2] = OF(1,1);
+        limits[2][3] = OF(1,1);
+        limits[2][4] = OF(5,1);
+        limits[2][5] = OF(1,1);
+        limits[2][6] = OF(-1,1);
+
+        OrdinaryFraction[] ext = new OrdinaryFraction[3];
+        ext[0] = OF(1,1);
+        ext[1] = OF(2,1);
+        ext[2] = OF(5,1);
+
+        int[] order = new int[]{4,5,6,0,1,2,3};
+
+        TaskABM<OrdinaryFraction> task = new TaskABM<>(func, new Matrix<>(limits,ext,order));
+        task.solve();
+        task.printSolution();
+    }
+    @Test
+    void simpleABMTask(){
+        OrdinaryFraction[] func = new OrdinaryFraction[7];
+        func[0]= OF(0,1);
+        func[1] = OF(0,1);
+        func[2] = OF(0,1);
+        func[3] = OF(0,1);
+        func[4] = OF(1,1);
+        func[5] = OF(1,1);
+        func[6] = ZERO;
+        OrdinaryFraction[][] limits = new OrdinaryFraction[2][6];
+
+        limits[0][0] = OF(1,1);
+        limits[0][1] = OF(0,1);
+        limits[0][2] = OF(1,1);
+        limits[0][3] = OF(3,1);
+        limits[0][4] = OF(3,1);
+        limits[0][5] = OF(1,1);
+
+        limits[1][0] = OF(0,1);
+        limits[1][1] = OF(1,1);
+        limits[1][2] = OF(2,1);
+        limits[1][3] = OF(0,1);
+        limits[1][4] = OF(3,1);
+        limits[1][5] = OF(-1,1);
+
+
+        OrdinaryFraction[] ext = new OrdinaryFraction[2];
+        ext[0] = OF(3,1);
+        ext[1] = OF(4,1);
+
+        int[] order = new int[]{4,5,0,1,2,3};
+
+        TaskABM<OrdinaryFraction> task = new TaskABM<>(func, new Matrix<>(limits,ext,order));
         task.solve();
         task.printSolution();
     }

@@ -1,5 +1,8 @@
 package ru.ac.uniyar.katkov.simplexmethod;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 public class Utils {
     public static <T extends Comparable<T>> int findPosOfMinEl(T[] ar){
         T min;
@@ -24,5 +27,16 @@ public class Utils {
             }
         }
         return col;
+    }
+    public static <T> T getlast(List<T> list){
+        return list.get(list.size()-1);
+    }
+    public static int indexOf(int[] array, int obj){
+        for(int i=0;i<array.length;++i){
+            if (array[i]==obj){
+                return i;
+            }
+        }
+        throw new NoSuchElementException();
     }
 }

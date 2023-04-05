@@ -37,6 +37,11 @@ public class OrdinaryFraction implements Num<OrdinaryFraction> {
 
     @Override
     public String toString() {
-        return numerator + "/" + denominator;
+        StringBuilder sb = new StringBuilder();
+        sb.append(numerator);
+        if(denominator!=1){
+            sb.append("/").append(denominator);
+        }
+        return sb.toString();
     }
 }

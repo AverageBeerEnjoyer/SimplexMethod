@@ -6,7 +6,7 @@ import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
-import ru.ac.uniyar.katkov.simplexmethod.math.simplex.SimplexTableCondition;
+import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.SimplexTableCondition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +59,7 @@ public class SimplexTable<T extends Num<T>> {
         }
     }
 
-    private void defineCondition() {
+    protected void defineCondition() {
         boolean noLimit = false;
         boolean finalTable = true;
         int[] order = matrix.getOrder();
@@ -119,7 +119,7 @@ public class SimplexTable<T extends Num<T>> {
         return rowToSwap;
     }
     private int choseColToSwap(){
-        return Utils.findPosOfMinEl(Arrays.copyOf(func, func.length - 1));
+        return Utils.indexOf(matrix.getOrder(),Utils.findPosOfMinEl(Arrays.copyOf(func,func.length-1)));
     }
     protected Pair<Integer, Integer> choseSwapElements() {
         int colToSwap = choseColToSwap();
@@ -129,5 +129,21 @@ public class SimplexTable<T extends Num<T>> {
 
     public SimplexTableCondition getCondition() {
         return condition;
+    }
+    public T getFunctionValue(){
+        return func[func.length-1];
+    }
+
+    /**
+     * for ABM tasks
+     * @return true if there are artificial variables in current basis
+     */
+    public boolean isArtificialVarsInBasis(){
+        for(int i=0;i< matrix.rows;++i){
+            if(matrix.getOrder()[i]>= matrix.columns-matrix.rows){
+                return true;
+            }
+        }
+        return false;
     }
 }

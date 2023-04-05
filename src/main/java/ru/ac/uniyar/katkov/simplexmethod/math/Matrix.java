@@ -11,6 +11,16 @@ public class Matrix<T extends Num<T>> implements Cloneable {
     private final T[][] numbers;
     private final T[] extension;
 
+    public Matrix(T[][] numbers, T[] extension, int[] order) {
+        if (numbers.length < 1 || numbers[0].length < 1) throw new IllegalArgumentException("empty matrix");
+        this.ametic = Arithmetic.getArithmeticOfType(extension[0]);
+        this.numbers = numbers;
+        this.rows = numbers.length;
+        this.columns = numbers[0].length;
+        this.extension = extension;
+        this.order = order;
+    }
+
     public Matrix(T[][] numbers, T[] extension) {
         if (numbers.length < 1 || numbers[0].length < 1) throw new IllegalArgumentException("empty matrix");
         this.ametic = Arithmetic.getArithmeticOfType(extension[0]);
@@ -23,6 +33,8 @@ public class Matrix<T extends Num<T>> implements Cloneable {
             order[i] = i;
         }
     }
+
+
 
     public void multiplyRow(int rowNum, T c) {
         for (int i = 0; i < columns; ++i) {

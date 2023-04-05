@@ -95,7 +95,7 @@ public class MainSceneController implements Initializable {
     private void createTask() {
         Task<? extends Num<?>> task;
         if (ordinary.isSelected()) {
-            task = TaskCreator.createOFTaskFromGrid(taskGrid, curRows, curCols);
+            task = TaskCreator.createOFABMTaskFromGrid(taskGrid, curRows, curCols);
         } else {
             task = TaskCreator.createDoubleTaskFromGrid(taskGrid, curRows, curCols);
         }
