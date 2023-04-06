@@ -65,8 +65,8 @@
                               <Label text="Basis vars" />
                               <VBox prefHeight="76.0" prefWidth="183.0" styleClass="containers">
                                  <children>
-                                    <RadioButton fx:id="mutableStartBasis" mnemonicParsing="false" text="Choose" />
-                                    <RadioButton fx:id="artBasisMethod" mnemonicParsing="false" text="artBasisMethod" />
+                                    <RadioButton fx:id="mutableStartBasis" mnemonicParsing="false" onAction="#setBasicVarsVisible" text="Choose" />
+                                    <RadioButton fx:id="artBasisMethod" mnemonicParsing="false" onAction="#setBasicVarsNotVisible" text="artBasisMethod" />
                                  </children>
                               </VBox>
                               <Button mnemonicParsing="false" onAction="#createTask" prefHeight="62.0" prefWidth="98.0" text="Solve">

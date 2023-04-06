@@ -9,7 +9,7 @@ import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
 
 public class TaskCreator {
 
-    public static Task<OrdinaryFraction> createOFTaskFromGrid(GridPane gridPane, int rows, int cols) {
+    public static Task<OrdinaryFraction> createOFTaskWithChosenBasisFromGrid(GridPane gridPane,int[] order, int rows, int cols) {
         OFArithmetic ametic = new OFArithmetic();
         OrdinaryFraction[][] limits = new OrdinaryFraction[rows][cols];
         OrdinaryFraction[] ext = new OrdinaryFraction[rows];
@@ -17,10 +17,14 @@ public class TaskCreator {
 
         fillTaskLimits(ametic, limits, ext, gridPane, rows, cols);
         fillTaskFunc(ametic, func, gridPane, cols);
-        return new Task<>(func, new Matrix<>(limits, ext));
+        Matrix<OrdinaryFraction> matrix = new Matrix<>(limits,ext);
+        for(int i=0;i<rows;++i){
+            matrix.swapColumns(i,order[i]);
+        }
+        return new Task<>(func, matrix);
     }
 
-    public static Task<Doubl> createDoubleTaskFromGrid(GridPane gridPane, int rows, int cols) {
+    public static Task<Doubl> createDoubleTaskWithChosenBasisFromGrid(GridPane gridPane,int[] order, int rows, int cols) {
         DoublArithmetic ametic = new DoublArithmetic();
         Doubl[][] limits = new Doubl[rows][cols];
         Doubl[] ext = new Doubl[rows];
@@ -28,7 +32,11 @@ public class TaskCreator {
 
         fillTaskLimits(ametic, limits, ext, gridPane, rows, cols);
         fillTaskFunc(ametic, func, gridPane, cols);
-        return new Task<>(func, new Matrix<>(limits, ext));
+        Matrix<Doubl> matrix = new Matrix<>(limits,ext);
+        for(int i=0;i<rows;++i){
+            matrix.swapColumns(i,order[i]);
+        }
+        return new Task<>(func, matrix);
     }
 
     @SuppressWarnings("unchecked")

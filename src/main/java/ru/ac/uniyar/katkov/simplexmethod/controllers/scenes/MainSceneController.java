@@ -47,7 +47,6 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void changeDimension() {
-
         if (rows.getValue() > cols.getValue()) {
             Alerts.showError("too many equations");
             return;
@@ -57,26 +56,65 @@ public class MainSceneController implements Initializable {
         forTask.getChildren().clear();
         taskGrid = createNewTaskTable(curRows, curCols);
         forTask.getChildren().add(taskGrid);
+        refillBasicVars();
     }
 
-    private void refillArtVars() {
+    private void refillBasicVars() {
         basicVariables.getChildren().removeIf(child -> child instanceof CheckBox);
         for (int i = 0; i < curCols; ++i) {
             CheckBox checkBox = new CheckBox("x" + (i + 1));
+            checkBox.setId(String.valueOf(i));
+            checkBox.setOnAction((event) -> blockCheckBoxes());
             basicVariables.getChildren().add(checkBox);
         }
     }
 
-    private boolean isChosenVarsCorrect() {
+    private int countSelectedCheckbox() {
         int cnt = 0;
         for (Node child : basicVariables.getChildren()) {
             if (child instanceof CheckBox) {
-                if (((CheckBox) child).isSelected()){
+                if (((CheckBox) child).isSelected()) {
                     ++cnt;
                 }
             }
         }
-        return cnt == curRows;
+        return cnt;
+    }
+
+    private void blockCheckBoxes() {
+        for (Node child : basicVariables.getChildren()) {
+            child.setDisable(false);
+        }
+        if (countSelectedCheckbox() < curRows) {
+            for (Node child : basicVariables.getChildren()) {
+                child.setDisable(false);
+            }
+            return;
+        }
+        for (Node child : basicVariables.getChildren()) {
+            if (child instanceof CheckBox) {
+                if (!((CheckBox) child).isSelected()) {
+                    child.setDisable(true);
+                }
+            }
+        }
+    }
+
+    private int[] getChosenBasicOrder() {
+        int[] order = new int[curCols];
+        int l = 0, r = curRows;
+        for (Node child : basicVariables.getChildren()) {
+            if (child instanceof CheckBox) {
+                if (((CheckBox) child).isSelected()) {
+                    order[l] = Integer.parseInt(child.getId());
+                    ++l;
+                } else {
+                    order[r] = Integer.parseInt(child.getId());
+                    ++r;
+                }
+            }
+        }
+        return order;
     }
 
     @Override
@@ -84,20 +122,38 @@ public class MainSceneController implements Initializable {
         initSpinners();
         initButtons();
         changeDimension();
-        basicVariables.setVisible(false);
+        setBasicVarsNotVisible();
     }
 
-    private void createABMTask() {
+    @FXML
+    private void setBasicVarsVisible() {
+        basicVariables.setVisible(true);
+    }
 
+    @FXML
+    private void setBasicVarsNotVisible() {
+        basicVariables.setVisible(false);
     }
 
     @FXML
     private void createTask() {
         Task<? extends Num<?>> task;
-        if (ordinary.isSelected()) {
-            task = TaskCreator.createOFABMTaskFromGrid(taskGrid, curRows, curCols);
+        if (artBasisMethod.isSelected()) {
+            if (ordinary.isSelected()) {
+                task = TaskCreator.createOFABMTaskFromGrid(taskGrid, curRows, curCols);
+            } else {
+                task = TaskCreator.createDoubleABMTaskFromGrid(taskGrid, curRows, curCols);
+            }
         } else {
-            task = TaskCreator.createDoubleTaskFromGrid(taskGrid, curRows, curCols);
+            if (countSelectedCheckbox() < curRows) {
+                Alerts.showError("Chose more basic variables.");
+                return;
+            }
+            if (ordinary.isSelected()) {
+                task = TaskCreator.createOFTaskWithChosenBasisFromGrid(taskGrid,getChosenBasicOrder(), curRows, curCols);
+            } else {
+                task = TaskCreator.createDoubleTaskWithChosenBasisFromGrid(taskGrid,getChosenBasicOrder(), curRows, curCols);
+            }
         }
         task.solve();
         task.printSolution();

@@ -23,13 +23,23 @@ public class Task<T extends Num<T>> {
     protected List<T> solution;
     protected TaskCondition condition;
 
-    public Task(T[] targetFunction, Matrix<T> limits){
+    public Task(TaskABM<T> taskABM, T[] func) {
+        if (taskABM.condition != TaskCondition.HAS_SOLUTION) throw new IllegalArgumentException();
+        ametic = taskABM.ametic;
+        this.targetFunction = func;
+        this.limits = taskABM.getMatrixForNewTask();
+        this.condition = TaskCondition.NOT_SOLVED;
+        this.steps = new ArrayList<>();
+    }
+
+    public Task(T[] targetFunction, Matrix<T> limits) {
         this.ametic = Arithmetic.getArithmeticOfType(targetFunction[0]);
         this.targetFunction = targetFunction;
         this.limits = limits;
         this.condition = TaskCondition.NOT_SOLVED;
         this.steps = new ArrayList<>();
     }
+
     public void solve() {
         SimplexTable<T> start = new SimplexTable<>(targetFunction.clone(), limits.clone());
         steps.add(start);
@@ -40,39 +50,44 @@ public class Task<T extends Num<T>> {
         defineCondition();
     }
 
-    protected void defineCondition(){
+    protected void defineCondition() {
         Optional<List<T>> solution = getlast(steps).getSolution();
-        if(solution.isPresent()){
+        if (solution.isPresent()) {
             condition = TaskCondition.HAS_SOLUTION;
             this.solution = solution.get();
-        }else{
+        } else {
             condition = TaskCondition.NOT_LIMITED;
         }
     }
 
     //DEBUG
-    public void printSolution(){
-        switch (condition){
-            case NOT_SOLVED:{
+    public void printSolution() {
+        switch (condition) {
+            case NOT_SOLVED: {
                 System.out.println("Task not solved yet");
                 return;
             }
-            case NOT_LIMITED:{
+            case NOT_LIMITED: {
                 System.out.println("function is not limited");
                 return;
             }
-            case NO_SOLUTION:{
+            case NO_SOLUTION: {
                 System.out.println("No solution");
                 return;
             }
-            default:{
+            default: {
                 for (T t : solution) {
                     System.out.println(t.toString());
                 }
-                System.out.println("function value: "+ametic.revert(getlast(steps).getFunctionValue()));
+                System.out.println("function value: " + ametic.revert(getlast(steps).getFunctionValue()));
             }
         }
     }
 
+    public List<T> getSolution() {
+        if (condition == TaskCondition.HAS_SOLUTION)
+            return solution;
+        return null;
+    }
 
 }

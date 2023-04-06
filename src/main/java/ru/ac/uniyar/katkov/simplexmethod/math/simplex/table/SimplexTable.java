@@ -146,4 +146,11 @@ public class SimplexTable<T extends Num<T>> {
         }
         return false;
     }
+
+    public Matrix<T> getCloneMatrix(){
+        return matrix.clone();
+    }
+    public T[] getCloneFunc(){
+        return func.clone();
+    }
 }
