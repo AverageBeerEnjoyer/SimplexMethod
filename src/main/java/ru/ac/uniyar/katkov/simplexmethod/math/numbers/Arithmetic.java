@@ -8,6 +8,14 @@ public interface Arithmetic<T extends Num<T>> {
             return (Arithmetic<T>) OFArithmetic.instance;
         } else return (Arithmetic<T>) DoublArithmetic.instance;
     }
+    @SuppressWarnings("unchecked")
+    static <T extends Num<T>> Arithmetic<T> parseArithmetic(String s){
+        return switch (s) {
+            case "OF" -> (Arithmetic<T>) OFArithmetic.instance;
+            case "D" -> (Arithmetic<T>) DoublArithmetic.instance;
+            default -> throw new IllegalArgumentException();
+        };
+    }
 
     T plus(T a, T b);
 

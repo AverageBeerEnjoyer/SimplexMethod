@@ -45,4 +45,9 @@ public class DoublArithmetic implements Arithmetic<Doubl>{
     public Doubl parse(String s) {
         return D(Double.parseDouble(s));
     }
+
+    @Override
+    public String toString() {
+        return "D";
+    }
 }

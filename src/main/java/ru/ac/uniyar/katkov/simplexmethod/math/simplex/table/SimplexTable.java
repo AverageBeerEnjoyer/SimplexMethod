@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class SimplexTable<T extends Num<T>> {
-    protected Arithmetic<T> ametic;
+    public Arithmetic<T> ametic;
     protected final T[] func;
     protected final Matrix<T> matrix;
     protected List<T> vector;
     protected SimplexTableCondition condition;
 
     public SimplexTable(T[] func, Matrix<T> matrix) {
-        this.ametic = Arithmetic.getArithmeticOfType(func[0]);
+        this.ametic = matrix.ametic;
         this.func = func;
         this.matrix = matrix;
         basicVariables();

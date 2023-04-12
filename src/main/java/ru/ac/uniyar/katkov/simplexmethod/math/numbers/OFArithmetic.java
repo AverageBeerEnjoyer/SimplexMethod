@@ -75,4 +75,8 @@ public class OFArithmetic implements Arithmetic<OrdinaryFraction> {
         return new OrdinaryFraction(numerator, denominator);
     }
 
+    @Override
+    public String toString() {
+        return "OF";
+    }
 }

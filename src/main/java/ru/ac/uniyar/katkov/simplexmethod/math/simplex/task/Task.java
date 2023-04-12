@@ -1,5 +1,6 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.simplex.task;
 
+import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
@@ -7,6 +8,7 @@ import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.SimplexTableCon
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.TaskCondition;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +18,7 @@ import static ru.ac.uniyar.katkov.simplexmethod.Utils.getlast;
 
 public class Task<T extends Num<T>> {
 
-    protected final Arithmetic<T> ametic;
+    public final Arithmetic<T> ametic;
     protected T[] targetFunction;
     protected Matrix<T> limits;
     protected List<SimplexTable<T>> steps;
@@ -33,7 +35,7 @@ public class Task<T extends Num<T>> {
     }
 
     public Task(T[] targetFunction, Matrix<T> limits) {
-        this.ametic = Arithmetic.getArithmeticOfType(targetFunction[0]);
+        this.ametic = limits.ametic;
         this.targetFunction = targetFunction;
         this.limits = limits;
         this.condition = TaskCondition.NOT_SOLVED;
@@ -63,19 +65,10 @@ public class Task<T extends Num<T>> {
     //DEBUG
     public void printSolution() {
         switch (condition) {
-            case NOT_SOLVED: {
-                System.out.println("Task not solved yet");
-                return;
-            }
-            case NOT_LIMITED: {
-                System.out.println("function is not limited");
-                return;
-            }
-            case NO_SOLUTION: {
-                System.out.println("No solution");
-                return;
-            }
-            default: {
+            case NOT_SOLVED -> System.out.println("Task not solved yet");
+            case NOT_LIMITED -> System.out.println("function is not limited");
+            case NO_SOLUTION -> System.out.println("No solution");
+            default -> {
                 for (T t : solution) {
                     System.out.println(t.toString());
                 }
@@ -90,4 +83,68 @@ public class Task<T extends Num<T>> {
         return null;
     }
 
+    public List<SimplexTable<T>> getSteps() {
+        return steps;
+    }
+
+    public Matrix<T> getLimits() {
+        return limits;
+    }
+
+    public T[] getTargetFunction() {
+        return targetFunction;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(ametic.toString()).append("\n");
+        sb.append(limits.rows).append(" ").append(limits.columns).append("\n");
+        for(T t:targetFunction){
+            sb.append(t).append(" ");
+        }
+        sb.append("\n");
+        for(T[] ts:limits.getNumbers()){
+            for(T t:ts){
+                sb.append(t).append(" ");
+            }
+            sb.append("\n");
+        }
+        for(T t:limits.getExtension()){
+            sb.append(t).append(" ");
+        }
+        return sb.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static  <T extends Num<T>> Task<T> parseTask(String s) {
+        String[] split = s.split(" ");
+        Arithmetic<T> ametic = Arithmetic.parseArithmetic(split[0]);
+        int rows, cols;
+        rows = Integer.parseInt(split[1]);
+        cols = Integer.parseInt(split[2]);
+        int it = 3;
+
+        T[] targetFunc = (T[]) Array.newInstance(ametic.zero().getClass(),cols+1);
+        for(T t:targetFunc){
+            t = ametic.parse(split[it]);
+            ++it;
+        }
+
+        T[][] limits = (T[][])Utils.Empty2DimArray(ametic.zero().getClass(),rows,cols);
+        for (T[] ts:limits) {
+            for (T t:ts) {
+                t = ametic.parse(split[it]);
+                ++it;
+            }
+        }
+
+        T[] ext = (T[]) Array.newInstance(ametic.zero().getClass(),rows);
+        for(T t: ext){
+            t = ametic.parse(split[it]);
+            ++it;
+        }
+        Matrix<T> matrix= new Matrix<>(limits,ext);
+        return new Task<>(targetFunc,matrix);
+    }
 }

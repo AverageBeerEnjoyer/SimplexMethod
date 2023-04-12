@@ -1,6 +1,6 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 
-public class OrdinaryFraction implements Num<OrdinaryFraction> {
+public class OrdinaryFraction implements Num<OrdinaryFraction>,Cloneable {
     public static final OrdinaryFraction ZERO = OF(0, 1);
 
     public final int numerator;
@@ -43,5 +43,11 @@ public class OrdinaryFraction implements Num<OrdinaryFraction> {
             sb.append("/").append(denominator);
         }
         return sb.toString();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        super.clone();
+        return OF(numerator,denominator);
     }
 }

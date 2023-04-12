@@ -2,10 +2,14 @@ package ru.ac.uniyar.katkov.simplexmethod.math;
 
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 
 public class Matrix<T extends Num<T>> implements Cloneable {
-    private final Arithmetic<T> ametic;
+    public final Arithmetic<T> ametic;
     public final int rows, columns;
     private final int[] order;
     private final T[][] numbers;
@@ -152,9 +156,22 @@ public class Matrix<T extends Num<T>> implements Cloneable {
     @Override
     public Matrix<T> clone() {
         try {
-            return (Matrix<T>) super.clone();
+            super.clone();
         } catch (CloneNotSupportedException | ClassCastException e) {
             throw new AssertionError();
         }
+        T[][] newNumbers =(T[][]) Array.newInstance(numbers[0].getClass(),rows);
+        for(int i=0;i<rows;++i){
+            newNumbers[i] = (T[]) Array.newInstance(numbers[0][0].getClass(),columns);
+            for(int j=0;j<columns;++j){
+                newNumbers[i][j]=ametic.parse(numbers[i][j].toString());
+            }
+        }
+        T[] newExt = (T[]) Array.newInstance(extension[0].getClass(),rows);
+        for(int i=0;i<rows;++i){
+            newExt[i]=ametic.parse(extension[i].toString());
+        }
+        int[] newOrder = Arrays.copyOf(order,order.length);
+        return new Matrix<>(newNumbers,newExt,newOrder);
     }
 }

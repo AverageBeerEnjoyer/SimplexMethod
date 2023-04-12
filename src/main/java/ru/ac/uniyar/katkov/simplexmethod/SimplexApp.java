@@ -13,6 +13,7 @@ public class SimplexApp extends Application {
         try {
             SceneManager sceneManager = new SceneManager();
             stage.setTitle("Simplex method");
+//            stage.setResizable(false);
             stage.setScene(sceneManager.getMainScene());
             stage.show();
         } catch (IOException e){

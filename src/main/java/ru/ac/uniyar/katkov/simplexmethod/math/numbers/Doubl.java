@@ -1,6 +1,6 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 
-public class Doubl implements Num<Doubl>{
+public class Doubl implements Num<Doubl>,Cloneable{
     private final static double eps = 0.000001;
     public final Double value;
     public Doubl(double value){
@@ -29,5 +29,11 @@ public class Doubl implements Num<Doubl>{
     @Override
     public String toString() {
         return value.toString();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        super.clone();
+        return D(value);
     }
 }
