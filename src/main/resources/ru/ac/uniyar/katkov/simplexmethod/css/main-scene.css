@@ -3,7 +3,6 @@
     -fx-font-size : 14;
 }
 .label{
-
     -fx-padding: 10;
     -fx-alignment: center;
 }
@@ -40,4 +39,10 @@
 }
 .left-vbox{
     -fx-background-color: lightgrey;
+}
+.beer-color-background{
+    -fx-background-color: rgba(250,250,210,0.66);
+}
+.beer-vibe{
+    -fx-background-image: url("../pictures/beer-background.jpg");
 }
