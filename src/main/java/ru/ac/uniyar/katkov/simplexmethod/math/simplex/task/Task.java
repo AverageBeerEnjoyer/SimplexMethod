@@ -62,17 +62,26 @@ public class Task<T extends Num<T>> {
         }
     }
 
-    //DEBUG
-    public void printSolution() {
+
+    public String solutionString() {
         switch (condition) {
-            case NOT_SOLVED -> System.out.println("Task not solved yet");
-            case NOT_LIMITED -> System.out.println("function is not limited");
-            case NO_SOLUTION -> System.out.println("No solution");
+            case NOT_SOLVED -> {
+                return "Task not solved yet";
+            }
+
+            case NOT_LIMITED -> {
+                return "function is not limited";
+            }
+            case NO_SOLUTION -> {
+                return "No solution";
+            }
             default -> {
+                StringBuilder sb = new StringBuilder();
                 for (T t : solution) {
-                    System.out.println(t.toString());
+                    sb.append(t.toString()).append("\n");
                 }
-                System.out.println("function value: " + ametic.revert(getlast(steps).getFunctionValue()));
+                sb.append("function value: ").append(ametic.revert(getlast(steps).getFunctionValue()));
+                return sb.toString();
             }
         }
     }
@@ -98,26 +107,24 @@ public class Task<T extends Num<T>> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(ametic.toString()).append("\n");
-        sb.append(limits.rows).append(" ").append(limits.columns).append("\n");
-        for(T t:targetFunction){
+        sb.append(ametic.toString()).append(" ");
+        sb.append(limits.rows).append(" ").append(limits.columns).append(" ");
+        for (T t : targetFunction) {
             sb.append(t).append(" ");
         }
-        sb.append("\n");
-        for(T[] ts:limits.getNumbers()){
-            for(T t:ts){
+        for (T[] ts : limits.getNumbers()) {
+            for (T t : ts) {
                 sb.append(t).append(" ");
             }
-            sb.append("\n");
         }
-        for(T t:limits.getExtension()){
+        for (T t : limits.getExtension()) {
             sb.append(t).append(" ");
         }
         return sb.toString();
     }
 
     @SuppressWarnings("unchecked")
-    public static  <T extends Num<T>> Task<T> parseTask(String s) {
+    public static <T extends Num<T>> Task<T> parseTask(String s) {
         String[] split = s.split(" ");
         Arithmetic<T> ametic = Arithmetic.parseArithmetic(split[0]);
         int rows, cols;
@@ -125,26 +132,26 @@ public class Task<T extends Num<T>> {
         cols = Integer.parseInt(split[2]);
         int it = 3;
 
-        T[] targetFunc = (T[]) Array.newInstance(ametic.zero().getClass(),cols+1);
-        for(T t:targetFunc){
-            t = ametic.parse(split[it]);
+        T[] targetFunc = (T[]) Array.newInstance(ametic.zero().getClass(), cols + 1);
+        for (int i = 0; i < targetFunc.length; ++i) {
+            targetFunc[i] = ametic.parse(split[it]);
             ++it;
         }
 
-        T[][] limits = (T[][])Utils.Empty2DimArray(ametic.zero().getClass(),rows,cols);
-        for (T[] ts:limits) {
-            for (T t:ts) {
-                t = ametic.parse(split[it]);
+        T[][] limits = (T[][]) Utils.Empty2DimArray(ametic.zero().getClass(), rows, cols);
+        for (T[] ts : limits) {
+            for (int i = 0; i < ts.length; ++i) {
+                ts[i] = ametic.parse(split[it]);
                 ++it;
             }
         }
 
-        T[] ext = (T[]) Array.newInstance(ametic.zero().getClass(),rows);
-        for(T t: ext){
-            t = ametic.parse(split[it]);
+        T[] ext = (T[]) Array.newInstance(ametic.zero().getClass(), rows);
+        for (int i = 0; i < ext.length; ++i) {
+            ext[i] = ametic.parse(split[it]);
             ++it;
         }
-        Matrix<T> matrix= new Matrix<>(limits,ext);
-        return new Task<>(targetFunc,matrix);
+        Matrix<T> matrix = new Matrix<>(limits, ext);
+        return new Task<>(targetFunc, matrix);
     }
 }

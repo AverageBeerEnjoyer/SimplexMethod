@@ -10,15 +10,11 @@ import java.io.IOException;
 public class SimplexApp extends Application {
     @Override
     public void start(Stage stage) {
-        try {
-            SceneManager sceneManager = new SceneManager();
-            stage.setTitle("Simplex method");
-//            stage.setResizable(false);
-            stage.setScene(sceneManager.getMainScene());
-            stage.show();
-        } catch (IOException e){
-            Alerts.showCriticalError();
-        }
+        SceneManager sceneManager = SceneManager.getInstance();
+        stage.setTitle("Simplex method");
+        stage.setResizable(false);
+        stage.setScene(sceneManager.getMainScene());
+        stage.show();
     }
 
     public static void main(String[] args) {

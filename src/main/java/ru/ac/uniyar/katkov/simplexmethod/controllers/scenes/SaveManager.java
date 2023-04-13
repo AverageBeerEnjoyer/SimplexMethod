@@ -6,9 +6,8 @@ import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.TaskParser;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Scanner;
 
 public class SaveManager {
     private FileChooser fileChooser;
@@ -18,7 +17,6 @@ public class SaveManager {
         fileChooser = new FileChooser();
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Text files", "*.txt"));
         fileChooser.setTitle("Chose task file");
-
         stage = new Stage();
     }
 
@@ -29,8 +27,28 @@ public class SaveManager {
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(task.toString());
             fileWriter.flush();
-        } catch (IOException e){
-            Alerts.showError("Can not open file "+file.getName());
+            fileWriter.close();
+        } catch (IOException e) {
+            Alerts.showError(Alerts.Causes.fileError);
+        }
+    }
+
+    public Task<?> open() {
+        File file = fileChooser.showOpenDialog(stage);
+        if(file == null) return null;
+        try {
+            FileReader fileReader = new FileReader(file);
+            Scanner scanner = new Scanner(fileReader);
+            StringBuilder sb = new StringBuilder();
+            while (scanner.hasNextLine()) {
+                sb.append(scanner.nextLine());
+            }
+            scanner.close();
+            fileReader.close();
+            return Task.parseTask(sb.toString());
+        } catch (IOException e) {
+            Alerts.showError(Alerts.Causes.fileError);
+            return null;
         }
     }
 }

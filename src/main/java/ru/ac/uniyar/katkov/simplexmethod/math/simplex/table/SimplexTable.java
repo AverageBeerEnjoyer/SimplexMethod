@@ -20,6 +20,8 @@ public class SimplexTable<T extends Num<T>> {
     protected List<T> vector;
     protected SimplexTableCondition condition;
 
+    private Pair<Integer,Integer> swapElement;
+
     public SimplexTable(T[] func, Matrix<T> matrix) {
         this.ametic = matrix.ametic;
         this.func = func;
@@ -98,8 +100,8 @@ public class SimplexTable<T extends Num<T>> {
         if (condition != SimplexTableCondition.NOT_FINAL) return this;
         T[] function = func.clone();
         Matrix<T> matrix = this.matrix.clone();
-        Pair<Integer, Integer> swap = choseSwapElements();
-        matrix.swapColumns(swap.getKey(), swap.getValue());
+        swapElement = choseSwapElements();
+        matrix.swapColumns(swapElement.getKey(), swapElement.getValue());
         return new SimplexTable<>(function, matrix);
     }
     private int choseRowToSwap(int colToSwap) {
@@ -126,7 +128,18 @@ public class SimplexTable<T extends Num<T>> {
         int rowToSwap = choseRowToSwap(colToSwap);
         return new Pair<>(rowToSwap, colToSwap);
     }
-
+    public String getVectorString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        for(int i=0;i<vector.size();++i){
+            sb.append(vector.get(i));
+            if(i!= vector.size()-1){
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
+    }
     public SimplexTableCondition getCondition() {
         return condition;
     }
@@ -152,5 +165,8 @@ public class SimplexTable<T extends Num<T>> {
     }
     public T[] getCloneFunc(){
         return func.clone();
+    }
+    public Pair<Integer,Integer> getSwapElement(){
+        return swapElement;
     }
 }

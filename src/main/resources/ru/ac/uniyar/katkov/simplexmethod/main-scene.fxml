@@ -31,19 +31,19 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                  <MenuItem mnemonicParsing="false"  text="Open task..." />
+                  <MenuItem mnemonicParsing="false" onAction="#openTask" text="Open task..." />
                   <MenuItem mnemonicParsing="false" onAction="#saveTask" text="Save task..." />
                         <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem mnemonicParsing="false" onAction="#clearTask" text="Clear" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem mnemonicParsing="false" text="Instructions" />
                     </items>
                 </Menu>
             </menus>
@@ -83,7 +83,7 @@
                                     <RadioButton fx:id="decimal" mnemonicParsing="false" onAction="#setDoublArithmetic" text="Decimal" />
                                  </children>
                               </VBox>
-                              <Label text="Basis vars" />
+                              <Label text="Basic vars" />
                               <VBox prefHeight="76.0" prefWidth="183.0" styleClass="containers">
                                  <children>
                                     <RadioButton fx:id="mutableStartBasis" mnemonicParsing="false" onAction="#setBasicVarsVisible" text="Choose" />
@@ -118,7 +118,17 @@
                                  <content>
                                     <Pane minHeight="649.0" minWidth="1305.0" styleClass="beer-vibe">
                                        <children>
-                                          <VBox fx:id="forTask" layoutX="65.0" layoutY="62.0" minHeight="-Infinity" minWidth="-Infinity" styleClass="containers" />
+                                          <HBox layoutX="65.0" layoutY="62.0">
+                                             <children>
+                                                <VBox fx:id="forTask" fillWidth="false" minHeight="-Infinity" minWidth="-Infinity" styleClass="containers" />
+                                                <Label fx:id="forSolution">
+                                                   <styleClass>
+                                                      <String fx:value="beer-color-background" />
+                                                      <String fx:value="label" />
+                                                   </styleClass>
+                                                </Label>
+                                             </children>
+                                          </HBox>
                                        </children>
                                     </Pane>
                                  </content>

@@ -46,3 +46,6 @@
 .beer-vibe{
     -fx-background-image: url("../pictures/beer-background.jpg");
 }
+.swap-element-label{
+    -fx-background-color: red;
+}

@@ -5,11 +5,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 public class Alerts {
-    public static class Causes{
+    public static class Causes {
         public static final String
                 notFilled = "There are empty fields",
                 wrongInput = "Incorrect input values",
-                wrongDim = "Too many equations";
+                wrongDim = "Too many equations",
+                fileError = "Can not open file";
     }
 
 

@@ -1,11 +1,12 @@
 package ru.ac.uniyar.katkov.simplexmethod.controllers.factories;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import ru.ac.uniyar.katkov.simplexmethod.ResourcesURLs;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
@@ -27,7 +28,7 @@ public class TablesFactory {
             for (int j = 0; j < cols; ++j) {
                 taskTable.add(new TextField(), j + 1, i + 2);
             }
-            taskTable.add(new TextField(), cols + 2, i + 2);
+            taskTable.add(new TextField(), cols + 1, i + 2);
         }
         for (ColumnConstraints col : taskTable.getColumnConstraints()) {
             col.setPrefWidth(75);
@@ -56,29 +57,32 @@ public class TablesFactory {
         }
         Matrix<T> matrix = simplexTable.getCloneMatrix();
         T[] func = simplexTable.getCloneFunc();
+        Pair<Integer, Integer> swap = simplexTable.getSwapElement();
         for (int i = 0; i < matrix.rows; ++i) {
-            grid.add(l("x" + (matrix.getOrder()[i]+1)), 0, i + 1);
+            grid.add(l("x" + (matrix.getOrder()[i] + 1)), 0, i + 1);
         }
-
         for (int i = matrix.rows; i < matrix.columns; ++i) {
-            grid.add(l("x" + (matrix.getOrder()[i]+1)), i - matrix.rows + 1, 0);
+            grid.add(l("x" + (matrix.getOrder()[i] + 1)), i - matrix.rows + 1, 0);
         }
-
+        grid.add(l("func"), 0, matrix.rows + 1);
+        grid.add(l(simplexTable.getVectorString()), 0, 0);
         for (int i = 0; i < matrix.rows; ++i) {
             for (int j = matrix.rows; j < matrix.columns; ++j) {
+                Label label = l(matrix.get(i, j).toString());
+                if (swap != null && i == swap.getKey() && j == swap.getValue()) {
+                    label.setStyle("-fx-background-color: red");
+                }
                 grid.add(l(matrix.get(i, j).toString()), j - matrix.rows + 1, i + 1);
             }
-            grid.add(l(matrix.getExtension()[i].toString()), matrix.columns-matrix.rows+1, i + 1);
+            grid.add(l(matrix.getExtension()[i].toString()), matrix.columns - matrix.rows + 1, i + 1);
         }
-
         for (int i = matrix.rows; i < matrix.columns; ++i) {
-            grid.add(l(func[matrix.getOrder()[i]].toString()), i - matrix.rows + 1, matrix.rows + 2);
+            grid.add(l(func[matrix.getOrder()[i]].toString()), i - matrix.rows + 1, matrix.rows + 1);
         }
-
         grid.add(
                 l(matrix.ametic.revert(simplexTable.getFunctionValue()).toString()),
                 matrix.columns - matrix.rows + 1,
-                matrix.rows + 2);
+                matrix.rows + 1);
         return grid;
     }
 
@@ -87,24 +91,24 @@ public class TablesFactory {
         Matrix<T> matrix = task.getLimits();
         T[] f = task.getTargetFunction();
         for (int i = 0; i < matrix.columns; ++i) {
-            Label label = new Label("x" +(matrix.getOrder()[i]+1));
+            Label label = new Label("x" + (matrix.getOrder()[i] + 1));
             grid.add(label, i + 1, 0);
-            Label label1 = new Label(f[i].toString());
+            Label label1 = new Label(f[matrix.getOrder()[i]].toString());
             grid.add(label1, i + 1, 1);
         }
-        grid.add(new Label("-> min"),matrix.columns+1,1);
+        grid.add(new Label("-> min"), matrix.columns + 1, 1);
         for (int i = 0; i < matrix.rows; ++i) {
             for (int j = 0; j < matrix.columns; ++j) {
                 Label label = new Label(matrix.get(i, j).toString());
                 grid.add(label, j + 1, i + 2);
             }
             Label label = new Label(matrix.getExtension()[i].toString());
-            grid.add(label,matrix.columns+1,i+2);
+            grid.add(label, matrix.columns + 1, i + 2);
         }
         return grid;
     }
 
-    private static Label l(String text){
+    private static Label l(String text) {
         Label label = new Label(text);
         label.minHeight(Region.USE_PREF_SIZE);
         label.setMinWidth(Region.USE_PREF_SIZE);

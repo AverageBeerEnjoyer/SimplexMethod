@@ -8,7 +8,6 @@ import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
 
-import java.io.StringReader;
 import java.lang.reflect.Array;
 
 public class TaskParser {
@@ -59,7 +58,7 @@ public class TaskParser {
             for (int j = 0; j < cols; ++j) {
                 limits[i][j] = parseNumber(ametic, i + 2, j + 1, gridPane);
             }
-            ext[i] = parseNumber(ametic, i + 2, cols + 2, gridPane);
+            ext[i] = parseNumber(ametic, i + 2, cols + 1, gridPane);
         }
         return new Matrix<>(limits, ext);
     }
@@ -109,5 +108,21 @@ public class TaskParser {
         return func;
     }
 
-
+    public static void setTaskToGrid(Task<?> task, GridPane gridPane){
+        for(int i=0;i<task.getLimits().rows;++i){
+            for(int j=0;j<task.getLimits().columns;++j){
+                TextField textField = (TextField) getFromGridRowCol(i+2,j+1,gridPane);
+                if(textField == null) return;
+                textField.textProperty().setValue(task.getLimits().get(i,j).toString());
+            }
+            TextField textField = (TextField) getFromGridRowCol(i+2,task.getLimits().columns+1,gridPane);
+            if(textField == null) return;
+            textField.textProperty().setValue(task.getLimits().getExt(i).toString());
+        }
+        for(int i=0;i<task.getLimits().columns;++i){
+            TextField textField = (TextField) getFromGridRowCol(1,i+1,gridPane);
+            if(textField == null) return;
+            textField.textProperty().setValue(task.getTargetFunction()[i].toString());
+        }
+    }
 }

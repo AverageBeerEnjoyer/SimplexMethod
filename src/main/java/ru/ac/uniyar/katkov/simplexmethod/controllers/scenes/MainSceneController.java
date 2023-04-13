@@ -7,7 +7,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.factories.TablesFactory;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.*;
@@ -29,7 +28,9 @@ public class MainSceneController implements Initializable {
     @FXML
     VBox forTask;
     @FXML
-    VBox forSolution, basicVariables;
+    VBox basicVariables;
+    @FXML
+    Label forSolution;
     @FXML
     RadioButton ordinary, decimal, artBasisMethod, mutableStartBasis;
     GridPane taskGrid;
@@ -73,6 +74,17 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
+    private void openTask() {
+        Task<?> newTask = saveManager.open();
+        if (newTask == null) return;
+        if(newTask.getLimits().rows > 15 || newTask.getLimits().columns>16) return;
+        rows.getValueFactory().setValue(newTask.getLimits().rows);
+        cols.getValueFactory().setValue(newTask.getLimits().columns);
+        changeDimension();
+        TaskParser.setTaskToGrid(newTask,taskGrid);
+    }
+
+    @FXML
     private void setOFArithmetic() {
         ametic = OFArithmetic.instance;
     }
@@ -87,6 +99,12 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
+    private void clearTask(){
+        forTask.getChildren().clear();
+        taskGrid = createInputTaskTable(curRows, curCols);
+        forTask.getChildren().add(taskGrid);
+    }
+    @FXML
     private void changeDimension() {
         if (rows.getValue() >= cols.getValue()) {
             Alerts.showError(Alerts.Causes.wrongDim);
@@ -94,9 +112,7 @@ public class MainSceneController implements Initializable {
         }
         this.curRows = rows.getValue();
         this.curCols = cols.getValue();
-        forTask.getChildren().clear();
-        taskGrid = createInputTaskTable(curRows, curCols);
-        forTask.getChildren().add(taskGrid);
+        clearTask();
         refillBasicVars();
     }
 
@@ -198,12 +214,6 @@ public class MainSceneController implements Initializable {
             Alerts.showError("");
             return;
         }
-        Arithmetic<? extends Num<?>> ametic;
-        if (ordinary.isSelected()) {
-            ametic = OFArithmetic.instance;
-        } else {
-            ametic = DoublArithmetic.instance;
-        }
         if (artBasisMethod.isSelected()) {
             task = TaskParser.createABMTaskFromGrid(ametic, taskGrid, curRows, curCols);
         } else {
@@ -235,8 +245,11 @@ public class MainSceneController implements Initializable {
         }
         mainTask.solve();
         displayTask(mainTask);
+        displaySolution(mainTask);
     }
-
+    private void displaySolution(Task<?> task){
+        forSolution.setText("Solution\n"+task.solutionString());
+    }
     private void displayTask(Task<?> task) {
         forTask.getChildren().add(TablesFactory.createTaskView(task));
         for (SimplexTable<?> table : task.getSteps()) {
