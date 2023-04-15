@@ -58,13 +58,12 @@ public class GaussMethod<T extends Num<T>> {
     }
 
     private void normalizeRow(Matrix<T> matrix,int row, int column) {
-        Arithmetic<T> ametic = Arithmetic.getArithmeticOfType(matrix.get(0,0));
-        T coef = ametic.flip(matrix.get(row, column));
+        T coef = matrix.ametic.flip(matrix.get(row, column));
         matrix.multiplyRow(row, coef);
     }
 
     private void excludeVarFromColumn(Matrix<T> matrix, int row, int column) {
-        Arithmetic<T> ametic = Arithmetic.getArithmeticOfType(matrix.get(0,0));
+        Arithmetic<T> ametic = matrix.ametic;
         for (int i = 0; i < matrix.rows; ++i) {
             if (i == row) continue;
             T coef = ametic.divide(matrix.get(i, column), ametic.revert(matrix.get(row, column)));

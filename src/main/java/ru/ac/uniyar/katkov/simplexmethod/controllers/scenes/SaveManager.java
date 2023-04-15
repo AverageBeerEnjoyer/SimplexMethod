@@ -3,15 +3,14 @@ package ru.ac.uniyar.katkov.simplexmethod.controllers.scenes;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.TaskParser;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 
 import java.io.*;
 import java.util.Scanner;
 
 public class SaveManager {
-    private FileChooser fileChooser;
-    private Stage stage;
+    private final FileChooser fileChooser;
+    private final Stage stage;
 
     public SaveManager() {
         fileChooser = new FileChooser();

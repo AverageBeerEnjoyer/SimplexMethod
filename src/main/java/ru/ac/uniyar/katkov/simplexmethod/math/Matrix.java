@@ -1,8 +1,8 @@
 package ru.ac.uniyar.katkov.simplexmethod.math;
 
+import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -16,21 +16,21 @@ public class Matrix<T extends Num<T>> implements Cloneable {
     private final T[] extension;
 
     public Matrix(T[][] numbers, T[] extension, int[] order) {
-        if (numbers.length < 1 || numbers[0].length < 1) throw new IllegalArgumentException("empty matrix");
-        this.ametic = Arithmetic.getArithmeticOfType(extension[0]);
-        this.numbers = numbers;
         this.rows = numbers.length;
         this.columns = numbers[0].length;
+        if (isDimensionIncorrect(rows, columns, extension.length)) throw new IllegalArgumentException("incorrect dimension");
+        this.ametic = Arithmetic.getArithmeticOfType(extension[0]);
+        this.numbers = numbers;
         this.extension = extension;
         this.order = order;
     }
 
     public Matrix(T[][] numbers, T[] extension) {
-        if (numbers.length < 1 || numbers[0].length < 1) throw new IllegalArgumentException("empty matrix");
-        this.ametic = Arithmetic.getArithmeticOfType(extension[0]);
-        this.numbers = numbers;
         this.rows = numbers.length;
         this.columns = numbers[0].length;
+        if (isDimensionIncorrect(rows, columns, extension.length)) throw new IllegalArgumentException("incorrect dimension");
+        this.ametic = Arithmetic.getArithmeticOfType(extension[0]);
+        this.numbers = numbers;
         this.extension = extension;
         order = new int[columns];
         for (int i = 0; i < columns; ++i) {
@@ -38,6 +38,9 @@ public class Matrix<T extends Num<T>> implements Cloneable {
         }
     }
 
+    private boolean isDimensionIncorrect(int rows, int columns, int extSize) {
+        return (rows <= 0 || rows >= 16 || columns <= 0 || columns >= 16 || extSize != rows);
+    }
 
 
     public void multiplyRow(int rowNum, T c) {
@@ -97,8 +100,8 @@ public class Matrix<T extends Num<T>> implements Cloneable {
 
     public void prepareToABM() {
         for (int i = 0; i < rows; ++i) {
-            if(extension[i].compareTo(ametic.zero())<0){
-                multiplyRow(i,ametic.parse("-1"));
+            if (extension[i].compareTo(ametic.zero()) < 0) {
+                multiplyRow(i, ametic.parse("-1"));
             }
         }
     }
@@ -160,18 +163,17 @@ public class Matrix<T extends Num<T>> implements Cloneable {
         } catch (CloneNotSupportedException | ClassCastException e) {
             throw new AssertionError();
         }
-        T[][] newNumbers =(T[][]) Array.newInstance(numbers[0].getClass(),rows);
-        for(int i=0;i<rows;++i){
-            newNumbers[i] = (T[]) Array.newInstance(numbers[0][0].getClass(),columns);
-            for(int j=0;j<columns;++j){
-                newNumbers[i][j]=ametic.parse(numbers[i][j].toString());
+        T[][] newNumbers = (T[][]) Utils.Empty2DimArray(numbers[0][0].getClass(),rows,columns);
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns; ++j) {
+                newNumbers[i][j] = ametic.parse(numbers[i][j].toString());
             }
         }
-        T[] newExt = (T[]) Array.newInstance(extension[0].getClass(),rows);
-        for(int i=0;i<rows;++i){
-            newExt[i]=ametic.parse(extension[i].toString());
+        T[] newExt = (T[]) Array.newInstance(extension[0].getClass(), rows);
+        for (int i = 0; i < rows; ++i) {
+            newExt[i] = ametic.parse(extension[i].toString());
         }
-        int[] newOrder = Arrays.copyOf(order,order.length);
-        return new Matrix<>(newNumbers,newExt,newOrder);
+        int[] newOrder = Arrays.copyOf(order, order.length);
+        return new Matrix<>(newNumbers, newExt, newOrder);
     }
 }

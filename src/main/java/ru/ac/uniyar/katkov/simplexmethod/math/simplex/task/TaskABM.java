@@ -1,11 +1,11 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.simplex.task;
 
+import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.TaskCondition;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,20 +35,17 @@ public class TaskABM<T extends Num<T>> extends Task<T> {
 
     public Matrix<T> getMatrixForNewTask() {
         Matrix<T> last = getlast(steps).getCloneMatrix();
-        T[][] nums = Arrays.copyOf(last.getNumbers(), last.rows);
-        int[] newOrder = new int[last.columns-last.rows];
-        for (int i = 0; i < last.rows; ++i) {
-            nums[i] = Arrays.copyOf(last.getNumbers()[i], last.columns - last.rows);
-        }
-        for (int i = 0, tmp = 0; i < last.columns-last.rows && tmp<last.columns; ++i, ++tmp) {
-            while(last.getOrder()[tmp]>=last.columns-last.rows){
+        T[][] nums = (T[][]) Utils.Empty2DimArray(ametic.zero().getClass(), last.rows, last.columns - last.rows);
+        int[] newOrder = new int[last.columns - last.rows];
+        for (int i = 0, tmp = 0; i < last.columns - last.rows && tmp < last.columns; ++i, ++tmp) {
+            while (last.getOrder()[tmp] >= last.columns - last.rows) {
                 ++tmp;
             }
-            newOrder[i]=last.getOrder()[tmp];
-            for(int j=0;j<last.rows;++j){
+            newOrder[i] = last.getOrder()[tmp];
+            for (int j = 0; j < last.rows; ++j) {
                 nums[j][i] = last.getNumbers()[j][tmp];
             }
         }
-        return new Matrix<>(nums,last.getExtension(),newOrder);
+        return new Matrix<>(nums, last.getExtension(), newOrder);
     }
 }

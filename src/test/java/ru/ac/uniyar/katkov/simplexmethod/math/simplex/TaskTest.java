@@ -70,7 +70,7 @@ public class TaskTest {
 
         Task<OrdinaryFraction> task = new Task<>(func, new Matrix<>(limits, ext));
         task.solve();
-        task.solutionString();
+        task.getSolutionString();
     }
 
     @Test
@@ -119,7 +119,7 @@ public class TaskTest {
 
         TaskABM<OrdinaryFraction> task = new TaskABM<>(func, new Matrix<>(limits, ext, order));
         task.solve();
-        task.solutionString();
+        task.getSolutionString();
     }
 
     @Test

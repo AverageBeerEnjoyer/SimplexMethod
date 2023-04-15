@@ -4,6 +4,7 @@ import static ru.ac.uniyar.katkov.simplexmethod.math.numbers.Doubl.D;
 
 public class DoublArithmetic implements Arithmetic<Doubl>{
     public static final DoublArithmetic instance = new DoublArithmetic();
+    private DoublArithmetic(){}
     @Override
     public Doubl plus(Doubl a, Doubl b) {
         return D(a.value+b.value);

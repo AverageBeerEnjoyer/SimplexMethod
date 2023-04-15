@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
-import ru.ac.uniyar.katkov.simplexmethod.controllers.factories.TablesFactory;
+import ru.ac.uniyar.katkov.simplexmethod.controllers.factories.NodesFactory;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.*;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
@@ -16,9 +16,6 @@ import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import static ru.ac.uniyar.katkov.simplexmethod.controllers.factories.TablesFactory.createInputTaskTable;
-import static ru.ac.uniyar.katkov.simplexmethod.controllers.factories.TablesFactory.createSimplexTableView;
 
 public class MainSceneController implements Initializable {
     private int curRows, curCols;
@@ -36,6 +33,9 @@ public class MainSceneController implements Initializable {
     GridPane taskGrid;
     Task<? extends Num<?>> task;
     Arithmetic<? extends Num<?>> ametic;
+    NodesFactory factory;
+
+    TaskParser parser;
 
     private void initSpinners() {
         rows.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 16, 3));
@@ -69,7 +69,7 @@ public class MainSceneController implements Initializable {
             Alerts.showError(Alerts.Causes.notFilled);
             return;
         }
-        Task<?> task1 = TaskParser.createDefaultTask(ametic, taskGrid, curRows, curCols);
+        Task<?> task1 = parser.createDefaultTask(ametic, taskGrid, curRows, curCols);
         saveManager.save(task1);
     }
 
@@ -81,7 +81,7 @@ public class MainSceneController implements Initializable {
         rows.getValueFactory().setValue(newTask.getLimits().rows);
         cols.getValueFactory().setValue(newTask.getLimits().columns);
         changeDimension();
-        TaskParser.setTaskToGrid(newTask,taskGrid);
+        parser.setTaskToGrid(newTask,taskGrid);
     }
 
     @FXML
@@ -101,7 +101,7 @@ public class MainSceneController implements Initializable {
     @FXML
     private void clearTask(){
         forTask.getChildren().clear();
-        taskGrid = createInputTaskTable(curRows, curCols);
+        taskGrid = factory.createInputTaskTable(curRows, curCols);
         forTask.getChildren().add(taskGrid);
     }
     @FXML
@@ -182,6 +182,8 @@ public class MainSceneController implements Initializable {
         setBasicVarsNotVisible();
         setOFArithmetic();
         initSaveManager();
+        parser = TaskParser.getInstance();
+        factory = NodesFactory.getInstance();
     }
 
     @FXML
@@ -204,7 +206,7 @@ public class MainSceneController implements Initializable {
     }
 
     private <T extends Num<T>> T[] getFunction() {
-        return (T[]) TaskParser.fillTaskFunc(ametic, taskGrid, curCols);
+        return (T[]) parser.fillTaskFunc(ametic, taskGrid, curCols);
     }
 
     private void defineTask() {
@@ -215,10 +217,10 @@ public class MainSceneController implements Initializable {
             return;
         }
         if (artBasisMethod.isSelected()) {
-            task = TaskParser.createABMTaskFromGrid(ametic, taskGrid, curRows, curCols);
+            task = parser.createABMTaskFromGrid(ametic, taskGrid, curRows, curCols);
         } else {
             if (countSelectedCheckbox() == curRows) {
-                task = TaskParser.createTaskWithChosenBasisFromGrid(ametic, taskGrid, getChosenBasicOrder(), curRows, curCols);
+                task = parser.createTaskWithChosenBasisFromGrid(ametic, taskGrid, getChosenBasicOrder(), curRows, curCols);
             } else {
                 Alerts.showError("Choose more basic variables");
             }
@@ -235,7 +237,7 @@ public class MainSceneController implements Initializable {
                 task.solve();
                 displayTask(task);
                 T[] func = getFunction();
-                mainTask = new Task<T>((TaskABM<T>) task, func);
+                mainTask = new Task<>((TaskABM<T>) task, func);
             } else {
                 mainTask = (Task<T>) task;
             }
@@ -248,12 +250,15 @@ public class MainSceneController implements Initializable {
         displaySolution(mainTask);
     }
     private void displaySolution(Task<?> task){
-        forSolution.setText("Solution\n"+task.solutionString());
+        forSolution.setText("Solution\n"+task.getSolutionString());
     }
     private void displayTask(Task<?> task) {
-        forTask.getChildren().add(TablesFactory.createTaskView(task));
+        forTask.getChildren().add(factory.createTaskView(task));
         for (SimplexTable<?> table : task.getSteps()) {
-            forTask.getChildren().add(createSimplexTableView(table));
+            forTask.getChildren().add(factory.createSimplexTableView(table));
         }
+        Label label = factory.l(task.getSolutionString());
+        label.getStyleClass().add("beer-color-background");
+        forTask.getChildren().add(label);
     }
 }

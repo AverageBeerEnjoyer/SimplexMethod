@@ -2,6 +2,8 @@ package ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 
 public class OFArithmetic implements Arithmetic<OrdinaryFraction> {
     public static final OFArithmetic instance = new OFArithmetic();
+
+    private OFArithmetic(){}
     private static final String regex = "(-?[1-9][0-9]{0,8}|0)(/?[1-9][0-9]{0,9})?";
     public static final OrdinaryFraction ZERO = OF(0, 1);
 

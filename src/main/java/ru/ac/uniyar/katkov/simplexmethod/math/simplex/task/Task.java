@@ -61,9 +61,21 @@ public class Task<T extends Num<T>> {
             condition = TaskCondition.NOT_LIMITED;
         }
     }
+    private String solutionString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("x* = (");
+        for (int i=0;i<solution.size();++i) {
+            sb.append(solution.get(i).toString());
+            if(i!= solution.size()-1){
+                sb.append(", ");
+            }
+        }
+        sb.append(")\n");
+        sb.append("function value: ").append(ametic.revert(getlast(steps).getFunctionValue()));
+        return sb.toString();
+    }
 
-
-    public String solutionString() {
+    public String getSolutionString() {
         switch (condition) {
             case NOT_SOLVED -> {
                 return "Task not solved yet";
@@ -76,12 +88,7 @@ public class Task<T extends Num<T>> {
                 return "No solution";
             }
             default -> {
-                StringBuilder sb = new StringBuilder();
-                for (T t : solution) {
-                    sb.append(t.toString()).append("\n");
-                }
-                sb.append("function value: ").append(ametic.revert(getlast(steps).getFunctionValue()));
-                return sb.toString();
+                return solutionString();
             }
         }
     }

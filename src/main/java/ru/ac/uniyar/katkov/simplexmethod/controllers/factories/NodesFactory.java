@@ -1,11 +1,9 @@
 package ru.ac.uniyar.katkov.simplexmethod.controllers.factories;
 
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import ru.ac.uniyar.katkov.simplexmethod.ResourcesURLs;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
@@ -16,8 +14,17 @@ import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 
 import java.io.IOException;
 
-public class TablesFactory {
-    public static GridPane createInputTaskTable(int rows, int cols) {
+public class NodesFactory {
+    private static NodesFactory instance;
+    public static NodesFactory getInstance(){
+        if(instance == null){
+            instance = new NodesFactory();
+        }
+        return instance;
+    }
+
+    public NodesFactory(){}
+    public GridPane createInputTaskTable(int rows, int cols) {
         GridPane taskTable = createTaskTable();
         for (int i = 0; i < cols; ++i) {
             taskTable.add(new Label("x" + (i + 1)), i + 1, 0);
@@ -33,12 +40,11 @@ public class TablesFactory {
         for (ColumnConstraints col : taskTable.getColumnConstraints()) {
             col.setPrefWidth(75);
         }
-//        taskTable.setGridLinesVisible(true);
         return taskTable;
 
     }
 
-    private static GridPane createTaskTable() {
+    private GridPane createTaskTable() {
         try {
             return new FXMLLoader(ResourcesURLs.getInstance().taskTableURL).load();
         } catch (IOException e) {
@@ -47,7 +53,7 @@ public class TablesFactory {
         }
     }
 
-    public static <T extends Num<T>> GridPane createSimplexTableView(SimplexTable<T> simplexTable) {
+    public <T extends Num<T>> GridPane createSimplexTableView(SimplexTable<T> simplexTable) {
         GridPane grid;
         try {
             grid = new FXMLLoader(ResourcesURLs.getInstance().simplexTableURL).load();
@@ -70,9 +76,9 @@ public class TablesFactory {
             for (int j = matrix.rows; j < matrix.columns; ++j) {
                 Label label = l(matrix.get(i, j).toString());
                 if (swap != null && i == swap.getKey() && j == swap.getValue()) {
-                    label.setStyle("-fx-background-color: red");
+                    label.setStyle("-fx-background-color: coral");
                 }
-                grid.add(l(matrix.get(i, j).toString()), j - matrix.rows + 1, i + 1);
+                grid.add(label, j - matrix.rows + 1, i + 1);
             }
             grid.add(l(matrix.getExtension()[i].toString()), matrix.columns - matrix.rows + 1, i + 1);
         }
@@ -86,7 +92,7 @@ public class TablesFactory {
         return grid;
     }
 
-    public static <T extends Num<T>> GridPane createTaskView(Task<T> task) {
+    public <T extends Num<T>> GridPane createTaskView(Task<T> task) {
         GridPane grid = createTaskTable();
         Matrix<T> matrix = task.getLimits();
         T[] f = task.getTargetFunction();
@@ -108,7 +114,7 @@ public class TablesFactory {
         return grid;
     }
 
-    private static Label l(String text) {
+    public Label l(String text) {
         Label label = new Label(text);
         label.minHeight(Region.USE_PREF_SIZE);
         label.setMinWidth(Region.USE_PREF_SIZE);
