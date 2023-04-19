@@ -1,5 +1,7 @@
 package ru.ac.uniyar.katkov.simplexmethod;
 
+import javafx.util.Pair;
+
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -50,5 +52,9 @@ public class Utils {
             newArray[i] = (T[]) Array.newInstance(tClass,cols);
         }
         return newArray;
+    }
+
+    public static <T> Pair<T,T> pair(T arg1,T arg2){
+        return new Pair<>(arg1,arg2);
     }
 }

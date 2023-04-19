@@ -2,9 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -141,21 +139,19 @@
                 </Tab>
                 <Tab text="Graphic method">
                     <content>
-                        <SplitPane dividerPositions="0.23373983739837398" prefHeight="160.0" prefWidth="200.0">
+                        <SplitPane dividerPositions="0.19583333333333333" prefHeight="160.0" prefWidth="200.0">
                             <items>
-                                <VBox prefHeight="766.0" prefWidth="808.0" />
-                                <Pane prefHeight="200.0" prefWidth="200.0">
-                                    <children>
-                                        <LineChart prefHeight="766.0" prefWidth="752.0">
-                                            <xAxis>
-                                                <CategoryAxis side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                                <NumberAxis side="LEFT" />
-                                            </yAxis>
-                                        </LineChart>
-                                    </children>
-                                </Pane>
+                                <VBox prefHeight="766.0" prefWidth="308.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#draw" text="Button" />
+                              <Button mnemonicParsing="false" onAction="#decreaseGraphScale" text="-" />
+                              <Button mnemonicParsing="false" onAction="#increaseGraphScale" text="+" />
+                           </children></VBox>
+                        <Pane prefHeight="746.0" prefWidth="1321.0" styleClass="beer-vibe">
+                           <children>
+                              <Canvas fx:id="canvas" height="746.0" width="1154.0" />
+                           </children>
+                        </Pane>
                             </items>
                         </SplitPane>
                     </content>

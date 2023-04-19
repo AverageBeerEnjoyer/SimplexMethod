@@ -1,7 +1,7 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 
 public class Doubl implements Num<Doubl>,Cloneable{
-    private final static double eps = 0.000001;
+    public final static double eps = 0.000001;
     public final Double value;
     public Doubl(double value){
         this.value = value;
@@ -18,6 +18,11 @@ public class Doubl implements Num<Doubl>,Cloneable{
     @Override
     public boolean isZero() {
         return Math.abs(value) < eps;
+    }
+
+    @Override
+    public double doubleValue() {
+        return value;
     }
 
 

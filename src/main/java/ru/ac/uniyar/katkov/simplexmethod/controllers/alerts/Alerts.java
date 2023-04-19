@@ -20,7 +20,8 @@ public class Alerts {
         alert.show();
     }
 
-    public static void showCriticalError() {
+    public static void showCriticalError(Exception e) {
+        e.printStackTrace();
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Something bad happened...\nPress FINISH to close this scary window");
         alert.getButtonTypes().clear();

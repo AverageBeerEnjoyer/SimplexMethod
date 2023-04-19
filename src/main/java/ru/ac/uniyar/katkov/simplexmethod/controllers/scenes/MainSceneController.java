@@ -4,11 +4,14 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import ru.ac.uniyar.katkov.simplexmethod.controllers.SaveManager;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.factories.NodesFactory;
+import ru.ac.uniyar.katkov.simplexmethod.controllers.graphics.CanvasGraphDrawer;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.*;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
@@ -20,6 +23,9 @@ import java.util.ResourceBundle;
 public class MainSceneController implements Initializable {
     private int curRows, curCols;
     private SaveManager saveManager;
+    private CanvasGraphDrawer cd;
+    @FXML
+    Canvas canvas;
     @FXML
     Spinner<Integer> rows, cols;
     @FXML
@@ -38,8 +44,8 @@ public class MainSceneController implements Initializable {
     TaskParser parser;
 
     private void initSpinners() {
-        rows.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 16, 3));
-        cols.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 16, 4));
+        rows.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 16, 3));
+        cols.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 16, 4));
     }
 
     private void initButtons() {
@@ -53,7 +59,9 @@ public class MainSceneController implements Initializable {
         mutableStartBasis.setToggleGroup(basis);
         artBasisMethod.selectedProperty().set(true);
     }
-
+    private void initCanvasDrawer(){
+        cd = new CanvasGraphDrawer(canvas);
+    }
     private void initSaveManager() {
         saveManager = new SaveManager();
     }
@@ -77,11 +85,11 @@ public class MainSceneController implements Initializable {
     private void openTask() {
         Task<?> newTask = saveManager.open();
         if (newTask == null) return;
-        if(newTask.getLimits().rows > 15 || newTask.getLimits().columns>16) return;
+        if (newTask.getLimits().rows > 15 || newTask.getLimits().columns > 16) return;
         rows.getValueFactory().setValue(newTask.getLimits().rows);
         cols.getValueFactory().setValue(newTask.getLimits().columns);
         changeDimension();
-        parser.setTaskToGrid(newTask,taskGrid);
+        parser.setTaskToGrid(newTask, taskGrid);
     }
 
     @FXML
@@ -99,11 +107,13 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void clearTask(){
+    private void clearTask() {
         forTask.getChildren().clear();
         taskGrid = factory.createInputTaskTable(curRows, curCols);
         forTask.getChildren().add(taskGrid);
+        forSolution.setText("");
     }
+
     @FXML
     private void changeDimension() {
         if (rows.getValue() >= cols.getValue()) {
@@ -176,14 +186,15 @@ public class MainSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        parser = TaskParser.getInstance();
+        factory = NodesFactory.getInstance();
         initSpinners();
         initButtons();
         changeDimension();
         setBasicVarsNotVisible();
         setOFArithmetic();
         initSaveManager();
-        parser = TaskParser.getInstance();
-        factory = NodesFactory.getInstance();
+        initCanvasDrawer();
     }
 
     @FXML
@@ -242,16 +253,21 @@ public class MainSceneController implements Initializable {
                 mainTask = (Task<T>) task;
             }
         } catch (ClassCastException e) {
-            Alerts.showCriticalError();
+            Alerts.showCriticalError(e);
             return;
         }
         mainTask.solve();
         displayTask(mainTask);
         displaySolution(mainTask);
+        if (curCols - curRows == 2) {
+            drawTask(mainTask);
+        }
     }
-    private void displaySolution(Task<?> task){
-        forSolution.setText("Solution\n"+task.getSolutionString());
+
+    private void displaySolution(Task<?> task) {
+        forSolution.setText("Solution\n" + task.getSolutionString());
     }
+
     private void displayTask(Task<?> task) {
         forTask.getChildren().add(factory.createTaskView(task));
         for (SimplexTable<?> table : task.getSteps()) {
@@ -260,5 +276,23 @@ public class MainSceneController implements Initializable {
         Label label = factory.l(task.getSolutionString());
         label.getStyleClass().add("beer-color-background");
         forTask.getChildren().add(label);
+    }
+
+    private void drawTask(Task<?> task) {
+        cd.setTask(task);
+    }
+
+    @FXML
+    private void draw() {
+    }
+
+    @FXML
+    private void increaseGraphScale() {
+        cd.increaseInitInterval();
+    }
+
+    @FXML
+    private void decreaseGraphScale() {
+        cd.decreaseInitInterval();
     }
 }

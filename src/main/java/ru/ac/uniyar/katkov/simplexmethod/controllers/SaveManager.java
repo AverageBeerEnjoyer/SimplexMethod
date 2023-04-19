@@ -1,4 +1,4 @@
-package ru.ac.uniyar.katkov.simplexmethod.controllers.scenes;
+package ru.ac.uniyar.katkov.simplexmethod.controllers;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;

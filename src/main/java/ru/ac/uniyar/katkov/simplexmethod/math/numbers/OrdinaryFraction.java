@@ -22,6 +22,11 @@ public class OrdinaryFraction implements Num<OrdinaryFraction>,Cloneable {
         return numerator == 0;
     }
 
+    @Override
+    public double doubleValue() {
+        return (double) numerator/denominator;
+    }
+
 
     @Override
     public int compareTo(OrdinaryFraction o) {

@@ -13,6 +13,7 @@ import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class NodesFactory {
     private static NodesFactory instance;
@@ -25,7 +26,7 @@ public class NodesFactory {
 
     public NodesFactory(){}
     public GridPane createInputTaskTable(int rows, int cols) {
-        GridPane taskTable = createTaskTable();
+        GridPane taskTable = Objects.requireNonNull(createTaskTable());
         for (int i = 0; i < cols; ++i) {
             taskTable.add(new Label("x" + (i + 1)), i + 1, 0);
             taskTable.add(new TextField(), i + 1, 1);
@@ -48,7 +49,7 @@ public class NodesFactory {
         try {
             return new FXMLLoader(ResourcesURLs.getInstance().taskTableURL).load();
         } catch (IOException e) {
-            Alerts.showCriticalError();
+            Alerts.showCriticalError(e);
             return null;
         }
     }
@@ -58,7 +59,7 @@ public class NodesFactory {
         try {
             grid = new FXMLLoader(ResourcesURLs.getInstance().simplexTableURL).load();
         } catch (IOException e) {
-            Alerts.showCriticalError();
+            Alerts.showCriticalError(e);
             return null;
         }
         Matrix<T> matrix = simplexTable.getCloneMatrix();
@@ -93,7 +94,7 @@ public class NodesFactory {
     }
 
     public <T extends Num<T>> GridPane createTaskView(Task<T> task) {
-        GridPane grid = createTaskTable();
+        GridPane grid = Objects.requireNonNull(createTaskTable());
         Matrix<T> matrix = task.getLimits();
         T[] f = task.getTargetFunction();
         for (int i = 0; i < matrix.columns; ++i) {

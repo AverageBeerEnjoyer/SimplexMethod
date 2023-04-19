@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.ac.uniyar.katkov.simplexmethod.Utils.pair;
+
 public class SimplexTable<T extends Num<T>> {
     public Arithmetic<T> ametic;
     protected final T[] func;
@@ -126,7 +128,7 @@ public class SimplexTable<T extends Num<T>> {
     protected Pair<Integer, Integer> choseSwapElements() {
         int colToSwap = choseColToSwap();
         int rowToSwap = choseRowToSwap(colToSwap);
-        return new Pair<>(rowToSwap, colToSwap);
+        return pair(rowToSwap, colToSwap);
     }
     public String getVectorString(){
         StringBuilder sb = new StringBuilder();

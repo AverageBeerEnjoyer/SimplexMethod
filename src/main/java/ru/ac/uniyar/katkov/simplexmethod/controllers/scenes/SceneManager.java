@@ -43,7 +43,7 @@ public class SceneManager {
             FXMLLoader loader = new FXMLLoader(ResourcesURLs.getInstance().mainSceneURL);
             mainScene = new Scene(loader.load(), screenWidth * 0.75, screenHeight * 0.75);
         } catch (IOException e){
-            Alerts.showCriticalError();
+            Alerts.showCriticalError(e);
         }
     }
 
