@@ -19,24 +19,26 @@ public class GaussMethod<T extends Num<T>> {
         solve(matrix);
     }
 
-    public void solveWithColSwaps(Matrix<T> matrix){
+    public void solveWithColSwaps(Matrix<T> matrix) {
         solve(matrix);
-        while(matrix.hasZeroOnMainDiagonal()){
-            makeDiagonal(matrix);
-            solve(matrix);
-        }
+        for (int i = 0; matrix.hasZeroOnMainDiagonal() && i < matrix.columns; ++i)
+            while (matrix.hasZeroOnMainDiagonal()) {
+                makeDiagonal(matrix);
+                solve(matrix);
+            }
     }
-    public void makeDiagonal(Matrix<T> matrix){
-        for(int i=0;i< matrix.rows;++i){
-            if(matrix.get(i,i).equals(OF(1,1))) continue;
-            int col = findNotZeroCol(matrix,i);
-            matrix.swapColumns(i,col);
+
+    public void makeDiagonal(Matrix<T> matrix) {
+        for (int i = 0; i < matrix.rows; ++i) {
+            if (matrix.get(i, i).equals(OF(1, 1))) continue;
+            int col = findNotZeroCol(matrix, i);
+            matrix.swapColumns(i, col);
         }
     }
 
-    public  void solve(Matrix<T> matrix) {
+    public void solve(Matrix<T> matrix) {
         for (int i = 0; i < Math.min(matrix.rows, matrix.columns); ++i) {
-            if (findFirstNotZero(matrix,i)) {
+            if (findFirstNotZero(matrix, i)) {
                 continue;
             }
             normalizeRow(matrix, i, i);
@@ -57,7 +59,7 @@ public class GaussMethod<T extends Num<T>> {
         return false;
     }
 
-    private void normalizeRow(Matrix<T> matrix,int row, int column) {
+    private void normalizeRow(Matrix<T> matrix, int row, int column) {
         T coef = matrix.ametic.flip(matrix.get(row, column));
         matrix.multiplyRow(row, coef);
     }
@@ -70,9 +72,10 @@ public class GaussMethod<T extends Num<T>> {
             matrix.addRowtoRow(i, row, coef);
         }
     }
-    private int findNotZeroCol(Matrix<T> matrix, int row){
-        for(int i = row;i< matrix.columns;++i){
-            if(!matrix.get(row,i).equals(ZERO)) return i;
+
+    private int findNotZeroCol(Matrix<T> matrix, int row) {
+        for (int i = row; i < matrix.columns; ++i) {
+            if (!matrix.get(row, i).equals(ZERO)) return i;
         }
         return row;
     }

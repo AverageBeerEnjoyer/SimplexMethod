@@ -27,6 +27,7 @@ public class CanvasGraphDrawer {
     private double initInterval;
     private int initIntervalToDraw;
     private final List<Straight> straights = new ArrayList<>();
+    private final List<String> unequals = new ArrayList<>();
     private Pair<Dot, Dot> antiNormalVector;
     private String ordinateName = "y";
     private String abscissaName = "x";
@@ -115,6 +116,7 @@ public class CanvasGraphDrawer {
 
     public void removeTask() {
         straights.clear();
+        unequals.clear();
         antiNormalVector = null;
         abscissaName = "x";
         ordinateName = "y";
@@ -155,6 +157,8 @@ public class CanvasGraphDrawer {
         removeTask();
         SimplexTable<?> table = getlast(task.getSteps());
         Matrix<?> matrix = table.getCloneMatrix();
+        abscissaName = "x" + (matrix.getOrder()[matrix.columns - 1] + 1);
+        ordinateName = "x" + (matrix.getOrder()[matrix.columns - 2] + 1);
         for (int i = 0; i < matrix.rows; ++i) {
             double a, b, c;
             a = -matrix.get(i, matrix.columns - 1).doubleValue();
@@ -163,9 +167,8 @@ public class CanvasGraphDrawer {
             Straight straight = new Straight(a, b, c);
             straights.add(straight);
         }
+        unequals.addAll(table.getUnequals());
         countFillArea();
-        abscissaName = "x" + (matrix.getOrder()[matrix.columns - 1] + 1);
-        ordinateName = "x" + (matrix.getOrder()[matrix.columns - 2] + 1);
         double x = task.getTargetFunction()[matrix.getOrder()[matrix.columns - 1]].doubleValue();
         double y = task.getTargetFunction()[matrix.getOrder()[matrix.columns - 2]].doubleValue();
         double length = Math.sqrt(x * x + y * y);
@@ -207,5 +210,8 @@ public class CanvasGraphDrawer {
         double x = graphCoords.x() * initInterval + x0;
         double y = y0 - graphCoords.y() * initInterval;
         return new Dot(x, y);
+    }
+    public List<String> getUnequals(){
+        return unequals;
     }
 }

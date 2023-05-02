@@ -171,4 +171,45 @@ public class SimplexTable<T extends Num<T>> {
     public Pair<Integer,Integer> getSwapElement(){
         return swapElement;
     }
+    public List<String> getUnequals(){
+        List<String> res = new ArrayList<>();
+        for(int i=0;i<matrix.rows;++i){
+            StringBuilder sb = new StringBuilder();
+            for(int j=matrix.rows;j<matrix.columns;++j){
+                T el = matrix.get(i,j);
+                switch (el.compareTo(ametic.zero())) {
+                    case -1 -> {
+                        if (j != matrix.rows) {
+                            sb.append(" + ");
+                        }
+                        sb.append(ametic.revert(el));
+                        sb.append(" * ");
+                        sb.append("x").append(matrix.getOrder()[j]+1);
+                    }
+                    case 1 -> {
+                        sb.append(" - ");
+                        sb.append(el);
+                        sb.append(" * ");
+                        sb.append("x").append(matrix.getOrder()[j]+1);
+                    }
+                    default -> {}
+                }
+            }
+            T el = matrix.getExt(i);
+            switch (el.compareTo(ametic.zero())) {
+                case -1 -> {
+                    sb.append(" - ");
+                    sb.append(ametic.revert(el));
+                }
+                case 1 -> {
+                    sb.append(" + ");
+                    sb.append(el);
+                }
+                default -> {}
+            }
+            sb.append(" >= 0");
+            res.add(sb.toString());
+        }
+        return res;
+    }
 }

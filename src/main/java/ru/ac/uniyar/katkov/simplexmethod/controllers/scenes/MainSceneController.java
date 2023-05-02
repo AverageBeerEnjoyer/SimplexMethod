@@ -18,6 +18,7 @@ import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainSceneController implements Initializable {
@@ -32,6 +33,8 @@ public class MainSceneController implements Initializable {
     VBox forTask;
     @FXML
     VBox basicVariables;
+    @FXML
+    VBox unequals;
     @FXML
     Label forSolution;
     @FXML
@@ -104,6 +107,7 @@ public class MainSceneController implements Initializable {
 
     private void clearSolution() {
         forTask.getChildren().removeIf((node -> node != taskGrid));
+        unequals.getChildren().clear();
     }
 
     @FXML
@@ -112,6 +116,7 @@ public class MainSceneController implements Initializable {
         taskGrid = factory.createInputTaskTable(curRows, curCols);
         forTask.getChildren().add(taskGrid);
         forSolution.setText("");
+        unequals.getChildren().clear();
     }
 
     @FXML
@@ -280,10 +285,10 @@ public class MainSceneController implements Initializable {
 
     private void drawTask(Task<?> task) {
         cd.setTask(task);
-    }
-
-    @FXML
-    private void draw() {
+        List<String> uneq = cd.getUnequals();
+        for(String s:uneq){
+            unequals.getChildren().add(factory.l(s));
+        }
     }
 
     @FXML

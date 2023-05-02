@@ -43,6 +43,7 @@ public class Task<T extends Num<T>> {
     }
 
     public void solve() {
+        if(condition!=TaskCondition.NOT_SOLVED) return;
         SimplexTable<T> start = new SimplexTable<>(targetFunction.clone(), limits.clone());
         steps.add(start);
         while (getlast(steps).getCondition() == SimplexTableCondition.NOT_FINAL) {
