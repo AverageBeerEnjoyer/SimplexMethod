@@ -169,8 +169,8 @@ public class CanvasGraphDrawer {
         }
         unequals.addAll(table.getUnequals());
         countFillArea();
-        double x = task.getTargetFunction()[matrix.getOrder()[matrix.columns - 1]].doubleValue();
-        double y = task.getTargetFunction()[matrix.getOrder()[matrix.columns - 2]].doubleValue();
+        double x = table.getCloneFunc()[matrix.getOrder()[matrix.columns - 1]].doubleValue();
+        double y = table.getCloneFunc()[matrix.getOrder()[matrix.columns - 2]].doubleValue();
         double length = Math.sqrt(x * x + y * y);
         Dot d1 = new Dot(-x / length, -y / length);
         Dot d2 = new Dot(0, 0);

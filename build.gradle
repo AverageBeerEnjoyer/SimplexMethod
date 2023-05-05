@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group 'ru.ac.uniyar.katkov'
@@ -11,9 +12,11 @@ repositories {
     mavenCentral()
 }
 
+
 ext {
     junitVersion = '5.7.1'
 }
+
 
 sourceCompatibility = "15"
 targetCompatibility = "15"
@@ -23,7 +26,7 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainClass = 'ru.ac.uniyar.katkov.simplexmethod.SimplexApp'
+    mainClass = 'ru.ac.uniyar.katkov.simplexmethod.Launcher'
 }
 
 javafx {
@@ -39,4 +42,14 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ru.ac.uniyar.katkov.simplexmethod.Launcher'
+        )
+    }
+
+
+
 }

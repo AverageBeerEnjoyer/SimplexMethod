@@ -11,7 +11,7 @@ import static ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction.*;
 
 public class OrdinaryFractionTest {
 
-    OFArithmetic ametic = new OFArithmetic();
+    OFArithmetic ametic = OFArithmetic.instance;
     OrdinaryFraction[] testNumbers = {OF(-15,7), OF(0,1), OF(5,1)};
     @Test
     void additionTest(){
