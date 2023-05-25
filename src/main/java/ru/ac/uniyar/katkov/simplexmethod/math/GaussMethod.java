@@ -1,11 +1,16 @@
 package ru.ac.uniyar.katkov.simplexmethod.math;
 
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 
 import static ru.ac.uniyar.katkov.simplexmethod.math.numbers.OrdinaryFraction.*;
 
-public class GaussMethod<T extends Num<T>> {
+public class GaussMethod<T extends Number> {
+    private Arithmetic<T> ametic;
+
+    public GaussMethod(Arithmetic<T> ametic){
+        this.ametic = ametic;
+    }
     public void solve(Matrix<T> matrix, int[] order) {
         if (order.length != matrix.rows) {
             solve(matrix);
@@ -47,9 +52,9 @@ public class GaussMethod<T extends Num<T>> {
     }
 
     private boolean findFirstNotZero(Matrix<T> matrix, int i) {
-        if (matrix.get(i, i).isZero()) {
+        if (ametic.isZero(matrix.get(i, i))) {
             for (int j = i + 1; j < matrix.rows; ++j) {
-                if (!matrix.get(j, i).isZero()) {
+                if (!ametic.isZero(matrix.get(j, i))) {
                     matrix.swapRows(j, i);
                     return false;
                 }

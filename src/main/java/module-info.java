@@ -5,4 +5,5 @@ module SimplexMethod.main {
     exports ru.ac.uniyar.katkov.simplexmethod;
     exports ru.ac.uniyar.katkov.simplexmethod.controllers.scenes;
     opens ru.ac.uniyar.katkov.simplexmethod.controllers.scenes to javafx.fxml;
+    opens ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 }

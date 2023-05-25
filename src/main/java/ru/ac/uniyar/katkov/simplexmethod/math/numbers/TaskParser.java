@@ -3,12 +3,10 @@ package ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
 
-import java.lang.reflect.Array;
 
 public class TaskParser {
     private static TaskParser instance;
@@ -21,7 +19,7 @@ public class TaskParser {
 
     private TaskParser(){}
 
-    public <T extends Num<T>> Task<T> createTaskWithChosenBasisFromGrid(Arithmetic<T> ametic, GridPane gridPane, int[] order, int rows, int cols) {
+    public <T extends Number> Task<T> createTaskWithChosenBasisFromGrid(Arithmetic<T> ametic, GridPane gridPane, int[] order, int rows, int cols) {
         Task<T> task = createDefaultTask(ametic, gridPane, rows, cols);
         for (int i = 0; i < rows; ++i) {
             task.getLimits().swapColumns(i, order[i]);
@@ -29,13 +27,13 @@ public class TaskParser {
         return task;
     }
 
-    public <T extends Num<T>> Task<T> createDefaultTask(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols) {
+    public <T extends Number> Task<T> createDefaultTask(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols) {
         Matrix<T> matrix = fillTaskLimits(ametic, gridPane, rows, cols);
         T[] func = fillTaskFunc(ametic, gridPane, cols);
         return new Task<>(func, matrix);
     }
 
-    public <T extends Num<T>> TaskABM<T> createABMTaskFromGrid(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols) {
+    public <T extends Number> TaskABM<T> createABMTaskFromGrid(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols) {
         Matrix<T> m = fillTaskLimits(ametic, gridPane, rows, cols);
         m.prepareToABM();
         Matrix<T> abmMatrix = fillABMLimits(ametic, m, rows, cols);
@@ -43,8 +41,7 @@ public class TaskParser {
         return new TaskABM<>(func, abmMatrix );
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Num<T>> T parseNumber(Arithmetic<? extends T> ametic, int row, int col, GridPane gridPane) {
+    private <T extends Number> T parseNumber(Arithmetic<? extends T> ametic, int row, int col, GridPane gridPane) {
         TextField tf = (TextField) getFromGridRowCol(row, col, gridPane);
         if (tf == null) {
             throw new NullPointerException();
@@ -60,9 +57,9 @@ public class TaskParser {
         return null;
     }
 
-    public <T extends Num<T>> Matrix<T> fillTaskLimits(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols) {
-        T[][] limits = (T[][]) Utils.Empty2DimArray(ametic.zero().getClass(), rows, cols);
-        T[] ext = (T[]) Array.newInstance(ametic.zero().getClass(), rows);
+    public <T extends Number> Matrix<T> fillTaskLimits(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols) {
+        T[][] limits = ametic.empty2DimArray(rows, cols);
+        T[] ext = ametic.emptyArray(rows);
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
                 limits[i][j] = parseNumber(ametic, i + 2, j + 1, gridPane);
@@ -72,8 +69,8 @@ public class TaskParser {
         return new Matrix<>(limits, ext);
     }
 
-    public <T extends Num<T>> T[] fillTaskFunc(Arithmetic<T> ametic, GridPane gridPane, int cols) {
-        T[] func = (T[]) Array.newInstance(ametic.zero().getClass(), cols + 1);
+    public <T extends Number> T[] fillTaskFunc(Arithmetic<T> ametic, GridPane gridPane, int cols) {
+        T[] func = ametic.emptyArray(cols + 1);
         for (int j = 0; j < cols; ++j) {
             func[j] = parseNumber(ametic, 1, j + 1, gridPane);
         }
@@ -81,8 +78,8 @@ public class TaskParser {
         return func;
     }
 
-    private <T extends Num<T>> Matrix<T> fillABMLimits(Arithmetic<T> ametic, Matrix<T> matrix, int rows, int cols) {
-        T[][] ABMLimits = (T[][]) Utils.Empty2DimArray(ametic.zero().getClass(), rows, cols + rows);
+    private <T extends Number> Matrix<T> fillABMLimits(Arithmetic<T> ametic, Matrix<T> matrix, int rows, int cols) {
+        T[][] ABMLimits = ametic.empty2DimArray(rows, cols + rows);
         int[] order = new int[rows + cols];
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < rows; ++j) {
@@ -105,8 +102,8 @@ public class TaskParser {
         return new Matrix<>(ABMLimits, matrix.getExtension(), order);
     }
 
-    private <T extends Num<T>> T[] fillABMTaskFunc(Arithmetic<T> ametic, int rows, int cols) {
-        T[] func = (T[]) Array.newInstance(ametic.zero().getClass(), cols + rows + 1);
+    private <T extends Number> T[] fillABMTaskFunc(Arithmetic<T> ametic, int rows, int cols) {
+        T[] func = ametic.emptyArray(cols + rows + 1);
         for (int j = 0; j < cols; ++j) {
             func[j] = ametic.zero();
         }

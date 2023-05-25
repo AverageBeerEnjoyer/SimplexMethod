@@ -1,15 +1,16 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 
-public interface Arithmetic<T extends Num<T>> {
-    @SuppressWarnings("unchecked")
-    static <T extends Num<T>> Arithmetic<T> getArithmeticOfType(T value) {
-        if (value instanceof OrdinaryFraction) {
+public abstract class Arithmetic<T extends Number> {
 
+    @SuppressWarnings("unchecked")
+    public static <T extends Number> Arithmetic<T> getArithmeticOfType(T value) {
+        if (value instanceof OrdinaryFraction) {
             return (Arithmetic<T>) OFArithmetic.instance;
         } else return (Arithmetic<T>) DoublArithmetic.instance;
     }
+
     @SuppressWarnings("unchecked")
-    static <T extends Num<T>> Arithmetic<T> parseArithmetic(String s){
+    public static <T extends Number> Arithmetic<T> parseArithmetic(String s) {
         return switch (s) {
             case "OF" -> (Arithmetic<T>) OFArithmetic.instance;
             case "D" -> (Arithmetic<T>) DoublArithmetic.instance;
@@ -17,19 +18,27 @@ public interface Arithmetic<T extends Num<T>> {
         };
     }
 
-    T plus(T a, T b);
+    public abstract boolean isZero(T a);
 
-    T minus(T a, T b);
+    public abstract T plus(T a, T b);
 
-    T multiply(T a, T b);
+    public abstract T minus(T a, T b);
 
-    T divide(T a, T b);
+    public abstract T multiply(T a, T b);
 
-    T revert(T a);
+    public abstract T divide(T a, T b);
 
-    T flip(T a);
+    public abstract T revert(T a);
 
-    T zero();
+    public abstract T flip(T a);
 
-    T parse(String s);
+    public abstract T zero();
+
+    public abstract T parse(String s);
+
+    public abstract T[] emptyArray(int n);
+
+    public abstract T[][] empty2DimArray(int n, int m);
+
+    public abstract int compare(T a, T b);
 }

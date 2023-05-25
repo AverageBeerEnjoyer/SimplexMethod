@@ -4,8 +4,8 @@ import javafx.util.Pair;
 import ru.ac.uniyar.katkov.simplexmethod.math.GaussMethod;
 import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.SimplexTableCondition;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static ru.ac.uniyar.katkov.simplexmethod.Utils.pair;
 
-public class SimplexTable<T extends Num<T>> {
+public class SimplexTable<T extends Number> {
     public Arithmetic<T> ametic;
     protected final T[] func;
     protected final Matrix<T> matrix;
@@ -35,7 +35,7 @@ public class SimplexTable<T extends Num<T>> {
     }
 
     protected void basicVariables() {
-        GaussMethod<T> gauss = new GaussMethod<>();
+        GaussMethod<T> gauss = new GaussMethod<>(ametic);
         gauss.solveWithColSwaps(matrix);
     }
 
@@ -68,10 +68,10 @@ public class SimplexTable<T extends Num<T>> {
         boolean finalTable = true;
         int[] order = matrix.getOrder();
         for (int i = matrix.rows; i < matrix.columns; ++i) {
-            if (func[order[i]].compareTo(ametic.zero()) < 0) {
+            if (ametic.compare(func[order[i]],ametic.zero()) < 0) {
                 finalTable = false;
                 for (int j = 0; j < matrix.rows; ++j) {
-                    if (matrix.get(j, i).compareTo(ametic.zero()) > 0) {
+                    if (ametic.compare(matrix.get(j, i),ametic.zero()) > 0) {
                         noLimit = false;
                         break;
                     }
@@ -111,11 +111,11 @@ public class SimplexTable<T extends Num<T>> {
         T max = ametic.zero();
         for (int i = 0; i < matrix.rows; ++i) {
             T el = matrix.get(i, colToSwap);
-            if (el.compareTo(ametic.zero()) < 0) continue;
+            if (ametic.compare(el,ametic.zero()) < 0) continue;
             T ext = matrix.getExt(i);
-            if (ext.isZero()) return i;
+            if (ametic.isZero(ext)) return i;
             el = ametic.divide(el, ext);
-            if (el.compareTo(max) > 0) {
+            if (ametic.compare(el,max) > 0) {
                 max = el;
                 rowToSwap = i;
             }
@@ -123,7 +123,7 @@ public class SimplexTable<T extends Num<T>> {
         return rowToSwap;
     }
     private int choseColToSwap(){
-        return Utils.indexOf(matrix.getOrder(),Utils.findPosOfMinEl(Arrays.copyOf(func,func.length-1)));
+        return Utils.indexOf(matrix.getOrder(),Utils.findPosOfMinEl(Arrays.copyOf(func,func.length-1), ametic));
     }
     protected Pair<Integer, Integer> choseSwapElements() {
         int colToSwap = choseColToSwap();
@@ -177,7 +177,7 @@ public class SimplexTable<T extends Num<T>> {
             StringBuilder sb = new StringBuilder();
             for(int j=matrix.rows;j<matrix.columns;++j){
                 T el = matrix.get(i,j);
-                switch (el.compareTo(ametic.zero())) {
+                switch (ametic.compare(el,ametic.zero())) {
                     case -1 -> {
                         if (j != matrix.rows) {
                             sb.append(" + ");
@@ -196,7 +196,7 @@ public class SimplexTable<T extends Num<T>> {
                 }
             }
             T el = matrix.getExt(i);
-            switch (el.compareTo(ametic.zero())) {
+            switch (ametic.compare(el,ametic.zero())) {
                 case -1 -> {
                     sb.append(" - ");
                     sb.append(ametic.revert(el));

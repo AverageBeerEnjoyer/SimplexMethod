@@ -8,7 +8,7 @@ import javafx.util.Pair;
 import ru.ac.uniyar.katkov.simplexmethod.ResourcesURLs;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 
@@ -54,7 +54,7 @@ public class NodesFactory {
         }
     }
 
-    public <T extends Num<T>> GridPane createSimplexTableView(SimplexTable<T> simplexTable) {
+    public <T extends Number> GridPane createSimplexTableView(SimplexTable<T> simplexTable) {
         GridPane grid;
         try {
             grid = new FXMLLoader(ResourcesURLs.getInstance().simplexTableURL).load();
@@ -93,7 +93,7 @@ public class NodesFactory {
         return grid;
     }
 
-    public <T extends Num<T>> GridPane createTaskView(Task<T> task) {
+    public <T extends Number> GridPane createTaskView(Task<T> task) {
         GridPane grid = Objects.requireNonNull(createTaskTable());
         Matrix<T> matrix = task.getLimits();
         T[] f = task.getTargetFunction();

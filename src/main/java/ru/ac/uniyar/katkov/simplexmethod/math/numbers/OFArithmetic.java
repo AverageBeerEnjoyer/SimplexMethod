@@ -1,6 +1,6 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 
-public class OFArithmetic implements Arithmetic<OrdinaryFraction> {
+public class OFArithmetic extends Arithmetic<OrdinaryFraction> {
     public static final OFArithmetic instance = new OFArithmetic();
 
     private OFArithmetic(){}
@@ -9,6 +9,11 @@ public class OFArithmetic implements Arithmetic<OrdinaryFraction> {
 
     public static OrdinaryFraction OF(int numerator, int denominator) {
         return new OrdinaryFraction(numerator, denominator);
+    }
+
+    @Override
+    public boolean isZero(OrdinaryFraction a) {
+        return a.numerator==0;
     }
 
     @Override
@@ -75,6 +80,21 @@ public class OFArithmetic implements Arithmetic<OrdinaryFraction> {
             denominator = 1;
         }
         return new OrdinaryFraction(numerator, denominator);
+    }
+
+    @Override
+    public OrdinaryFraction[] emptyArray(int n) {
+        return new OrdinaryFraction[n];
+    }
+
+    @Override
+    public OrdinaryFraction[][] empty2DimArray(int n, int m) {
+        return new OrdinaryFraction[n][m];
+    }
+
+    @Override
+    public int compare(OrdinaryFraction a, OrdinaryFraction b) {
+        return Integer.compare(a.numerator*b.denominator,b.numerator*a.denominator);
     }
 
     @Override

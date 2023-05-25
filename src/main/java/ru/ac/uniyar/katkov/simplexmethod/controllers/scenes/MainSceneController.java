@@ -13,6 +13,7 @@ import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.factories.NodesFactory;
 import ru.ac.uniyar.katkov.simplexmethod.controllers.graphics.CanvasGraphDrawer;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.*;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
@@ -40,8 +41,8 @@ public class MainSceneController implements Initializable {
     @FXML
     RadioButton ordinary, decimal, artBasisMethod, mutableStartBasis;
     GridPane taskGrid;
-    Task<? extends Num<?>> task;
-    Arithmetic<? extends Num<?>> ametic;
+    Task<? extends Number> task;
+    Arithmetic<? extends Number> ametic;
     NodesFactory factory;
 
     TaskParser parser;
@@ -221,8 +222,8 @@ public class MainSceneController implements Initializable {
         return false;
     }
 
-    private <T extends Num<T>> T[] getFunction() {
-        return (T[]) parser.fillTaskFunc(ametic, taskGrid, curCols);
+    private Number[] getFunction() {
+        return parser.fillTaskFunc(ametic, taskGrid, curCols);
     }
 
     private void defineTask() {
@@ -244,18 +245,18 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private <T extends Num<T>> void createTask() {
+    private void createTask() {
         defineTask();
-        Task<T> mainTask;
+        Task<? extends Number> mainTask;
         if (task == null) return;
         try {
             if (task instanceof TaskABM) {
                 task.solve();
                 displayTask(task);
-                T[] func = getFunction();
-                mainTask = new Task<>((TaskABM<T>) task, func);
+                Number[] func = getFunction();
+                mainTask = new Task<>((TaskABM) task, func);
             } else {
-                mainTask = (Task<T>) task;
+                mainTask = task;
             }
         } catch (ClassCastException e) {
             Alerts.showCriticalError(e);

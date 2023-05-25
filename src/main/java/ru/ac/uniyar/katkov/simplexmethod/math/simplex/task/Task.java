@@ -1,14 +1,12 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.simplex.task;
 
-import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.SimplexTableCondition;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.TaskCondition;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +14,7 @@ import java.util.Optional;
 import static ru.ac.uniyar.katkov.simplexmethod.Utils.getlast;
 
 
-public class Task<T extends Num<T>> {
+public class Task<T extends Number> {
 
     public final Arithmetic<T> ametic;
     protected T[] targetFunction;
@@ -131,8 +129,7 @@ public class Task<T extends Num<T>> {
         return sb.toString();
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends Num<T>> Task<T> parseTask(String s) {
+    public static <T extends Number> Task<T> parseTask(String s) {
         String[] split = s.split(" ");
         Arithmetic<T> ametic = Arithmetic.parseArithmetic(split[0]);
         int rows, cols;
@@ -140,13 +137,13 @@ public class Task<T extends Num<T>> {
         cols = Integer.parseInt(split[2]);
         int it = 3;
 
-        T[] targetFunc = (T[]) Array.newInstance(ametic.zero().getClass(), cols + 1);
+        T[] targetFunc =ametic.emptyArray (cols+1);
         for (int i = 0; i < targetFunc.length; ++i) {
             targetFunc[i] = ametic.parse(split[it]);
             ++it;
         }
 
-        T[][] limits = (T[][]) Utils.Empty2DimArray(ametic.zero().getClass(), rows, cols);
+        T[][] limits = ametic.empty2DimArray(rows, cols);
         for (T[] ts : limits) {
             for (int i = 0; i < ts.length; ++i) {
                 ts[i] = ametic.parse(split[it]);
@@ -154,7 +151,7 @@ public class Task<T extends Num<T>> {
             }
         }
 
-        T[] ext = (T[]) Array.newInstance(ametic.zero().getClass(), rows);
+        T[] ext =  ametic.emptyArray(rows);
         for (int i = 0; i < ext.length; ++i) {
             ext[i] = ametic.parse(split[it]);
             ++it;

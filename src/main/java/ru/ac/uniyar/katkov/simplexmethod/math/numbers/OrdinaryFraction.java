@@ -1,6 +1,6 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 
-public class OrdinaryFraction implements Num<OrdinaryFraction>,Cloneable {
+public class OrdinaryFraction extends Number implements Cloneable, Comparable<OrdinaryFraction> {
     public static final OrdinaryFraction ZERO = OF(0, 1);
 
     public final int numerator;
@@ -16,10 +16,6 @@ public class OrdinaryFraction implements Num<OrdinaryFraction>,Cloneable {
 
     public static OrdinaryFraction OF(int numerator, int denominator) {
         return new OrdinaryFraction(numerator, denominator);
-    }
-    @Override
-    public boolean isZero() {
-        return numerator == 0;
     }
 
     @Override

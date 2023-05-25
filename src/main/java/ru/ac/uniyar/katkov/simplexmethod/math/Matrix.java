@@ -1,14 +1,12 @@
 package ru.ac.uniyar.katkov.simplexmethod.math;
 
-import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 
-public class Matrix<T extends Num<T>> implements Cloneable {
+public class Matrix<T extends Number> implements Cloneable {
     public final Arithmetic<T> ametic;
     public final int rows, columns;
     private final int[] order;
@@ -89,9 +87,9 @@ public class Matrix<T extends Num<T>> implements Cloneable {
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < rows; ++j) {
                 if (j == i) {
-                    if (numbers[i][j].isZero()) return false;
+                    if (ametic.isZero(numbers[i][j])) return false;
                 } else {
-                    if (!numbers[i][j].isZero()) return false;
+                    if (!ametic.isZero(numbers[i][j])) return false;
                 }
             }
         }
@@ -100,7 +98,7 @@ public class Matrix<T extends Num<T>> implements Cloneable {
 
     public void prepareToABM() {
         for (int i = 0; i < rows; ++i) {
-            if (extension[i].compareTo(ametic.zero()) < 0) {
+            if (ametic.compare(extension[i],ametic.zero()) < 0) {
                 multiplyRow(i, ametic.parse("-1"));
             }
         }
@@ -108,7 +106,7 @@ public class Matrix<T extends Num<T>> implements Cloneable {
 
     public boolean hasZeroOnMainDiagonal() {
         for (int i = 0; i < rows; ++i) {
-            if (numbers[i][i].isZero()) return true;
+            if (ametic.isZero(numbers[i][i])) return true;
         }
         return false;
     }
@@ -163,13 +161,13 @@ public class Matrix<T extends Num<T>> implements Cloneable {
         } catch (CloneNotSupportedException | ClassCastException e) {
             throw new AssertionError();
         }
-        T[][] newNumbers = (T[][]) Utils.Empty2DimArray(numbers[0][0].getClass(),rows,columns);
+        T[][] newNumbers =  ametic.empty2DimArray(rows,columns);
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < columns; ++j) {
                 newNumbers[i][j] = ametic.parse(numbers[i][j].toString());
             }
         }
-        T[] newExt = (T[]) Array.newInstance(extension[0].getClass(), rows);
+        T[] newExt = ametic.emptyArray(rows);
         for (int i = 0; i < rows; ++i) {
             newExt[i] = ametic.parse(extension[i].toString());
         }

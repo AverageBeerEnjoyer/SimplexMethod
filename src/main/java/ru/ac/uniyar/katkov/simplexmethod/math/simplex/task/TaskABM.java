@@ -1,8 +1,7 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.simplex.task;
 
-import ru.ac.uniyar.katkov.simplexmethod.Utils;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
-import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Num;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.TaskCondition;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 
@@ -12,7 +11,7 @@ import java.util.Optional;
 import static ru.ac.uniyar.katkov.simplexmethod.Utils.getlast;
 import static ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.SimplexTableCondition.FINAL;
 
-public class TaskABM<T extends Num<T>> extends Task<T> {
+public class TaskABM<T extends Number> extends Task<T> {
     public TaskABM(T[] targetFunction, Matrix<T> limits) {
         super(targetFunction, limits);
     }
@@ -30,12 +29,12 @@ public class TaskABM<T extends Num<T>> extends Task<T> {
 
     private boolean isSolutionCorrect() {
         SimplexTable<T> last = getlast(steps);
-        return last.getCondition() == FINAL && !last.isArtificialVarsInBasis() && last.getFunctionValue().isZero();
+        return last.getCondition() == FINAL && !last.isArtificialVarsInBasis() && ametic.isZero(last.getFunctionValue());
     }
 
     public Matrix<T> getMatrixForNewTask() {
         Matrix<T> last = getlast(steps).getCloneMatrix();
-        T[][] nums = (T[][]) Utils.Empty2DimArray(ametic.zero().getClass(), last.rows, last.columns - last.rows);
+        T[][] nums = ametic.empty2DimArray(last.rows, last.columns - last.rows);
         int[] newOrder = new int[last.columns - last.rows];
         for (int i = 0, tmp = 0; i < last.columns - last.rows && tmp < last.columns; ++i, ++tmp) {
             while (last.getOrder()[tmp] >= last.columns - last.rows) {
