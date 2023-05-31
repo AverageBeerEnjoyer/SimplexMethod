@@ -1,8 +1,8 @@
 package ru.ac.uniyar.katkov.simplexmethod.math;
 
 import javafx.geometry.Rectangle2D;
-import ru.ac.uniyar.katkov.simplexmethod.controllers.graphics.Dot;
-import ru.ac.uniyar.katkov.simplexmethod.controllers.graphics.Straight;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.graphics.Dot;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.graphics.Straight;
 
 import java.util.ArrayList;
 import java.util.List;

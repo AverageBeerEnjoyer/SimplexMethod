@@ -1,4 +1,4 @@
-package ru.ac.uniyar.katkov.simplexmethod.controllers.graphics;
+package ru.ac.uniyar.katkov.simplexmethod.presenters.graphics;
 
 public class Dot {
     private final double x, y;

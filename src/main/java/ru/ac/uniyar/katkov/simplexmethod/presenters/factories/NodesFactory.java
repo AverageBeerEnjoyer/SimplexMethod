@@ -1,4 +1,4 @@
-package ru.ac.uniyar.katkov.simplexmethod.controllers.factories;
+package ru.ac.uniyar.katkov.simplexmethod.presenters.factories;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -6,7 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.util.Pair;
 import ru.ac.uniyar.katkov.simplexmethod.ResourcesURLs;
-import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.alerts.Alerts;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;

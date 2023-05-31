@@ -1,8 +1,9 @@
-package ru.ac.uniyar.katkov.simplexmethod.controllers;
+package ru.ac.uniyar.katkov.simplexmethod.presenters;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
+import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.alerts.Alerts;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 
 import java.io.*;
@@ -19,7 +20,7 @@ public class SaveManager {
         stage = new Stage();
     }
 
-    public void save(Task<?> task) {
+    public void save(Task<? extends Number> task) {
         File file = fileChooser.showSaveDialog(stage);
         if (file == null) return;
         try {
@@ -32,7 +33,7 @@ public class SaveManager {
         }
     }
 
-    public Task<?> open() {
+    public Task<? extends Number> open() {
         File file = fileChooser.showOpenDialog(stage);
         if(file == null) return null;
         try {

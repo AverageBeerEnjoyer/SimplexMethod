@@ -1,4 +1,4 @@
-package ru.ac.uniyar.katkov.simplexmethod.controllers.graphics;
+package ru.ac.uniyar.katkov.simplexmethod.presenters.graphics;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -153,12 +153,7 @@ public class CanvasGraphDrawer {
         drawText("-n",antiNormalVector.getKey());
     }
 
-    public void setTask(Task<?> task) {
-        removeTask();
-        SimplexTable<?> table = getlast(task.getSteps());
-        Matrix<?> matrix = table.getCloneMatrix();
-        abscissaName = "x" + (matrix.getOrder()[matrix.columns - 1] + 1);
-        ordinateName = "x" + (matrix.getOrder()[matrix.columns - 2] + 1);
+    private void addStraightsFromMatrix(Matrix<?> matrix){
         for (int i = 0; i < matrix.rows; ++i) {
             double a, b, c;
             a = -matrix.get(i, matrix.columns - 1).doubleValue();
@@ -167,15 +162,51 @@ public class CanvasGraphDrawer {
             Straight straight = new Straight(a, b, c);
             straights.add(straight);
         }
+    }
+
+    private void setOrdinateName(String s){
+        this.ordinateName = s;
+    }
+    private void setAbscissaName(String s){
+        this.abscissaName = s;
+    }
+
+    private void setTaskData(Task<?> task){
+        if(task == null) return;
+        if(task.getLimits().columns-task.getLimits().rows !=2){
+            unequals.add("Can not draw in 2 dimensions");
+            return;
+        }
+        SimplexTable<?> table = getlast(task.getSteps());
+        Matrix<?> matrix = table.getCloneMatrix();
+        int[] order = matrix.getOrder();
+
+        setAbscissaName("x" + (order[matrix.columns - 1] + 1));
+        setOrdinateName("x" + (order[matrix.columns - 2] + 1));
+        addStraightsFromMatrix(matrix);
+
         unequals.addAll(table.getUnequals());
+        unequals.add("Solution:");
+        unequals.addAll(List.of(task.getSolutionString().split("\n")));
+
         countFillArea();
-        double x = table.getCloneFunc()[matrix.getOrder()[matrix.columns - 1]].doubleValue();
-        double y = table.getCloneFunc()[matrix.getOrder()[matrix.columns - 2]].doubleValue();
+
+        defineAntiNormalVector(table,matrix);
+    }
+
+    public void setTask(Task<?> task) {
+        removeTask();
+        setTaskData(task);
+        draw();
+    }
+
+    private void defineAntiNormalVector(SimplexTable<?> finalTable, Matrix<?> matrix){
+        double x = finalTable.getCloneFunc()[matrix.getOrder()[matrix.columns - 1]].doubleValue();
+        double y = finalTable.getCloneFunc()[matrix.getOrder()[matrix.columns - 2]].doubleValue();
         double length = Math.sqrt(x * x + y * y);
         Dot d1 = new Dot(-x / length, -y / length);
         Dot d2 = new Dot(0, 0);
         antiNormalVector = pair(d1, d2);
-        draw();
     }
 
     public void increaseInitInterval() {

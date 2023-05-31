@@ -1,41 +1,30 @@
-package ru.ac.uniyar.katkov.simplexmethod.controllers.scenes;
+package ru.ac.uniyar.katkov.simplexmethod.presenters.controllers;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import ru.ac.uniyar.katkov.simplexmethod.controllers.SaveManager;
-import ru.ac.uniyar.katkov.simplexmethod.controllers.alerts.Alerts;
-import ru.ac.uniyar.katkov.simplexmethod.controllers.factories.NodesFactory;
-import ru.ac.uniyar.katkov.simplexmethod.controllers.graphics.CanvasGraphDrawer;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.alerts.Alerts;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.factories.NodesFactory;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.*;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
-import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
-public class MainSceneController implements Initializable {
+public class InputController implements Initializable {
+    private MainSceneController parent;
     private int curRows, curCols;
-    private SaveManager saveManager;
-    private CanvasGraphDrawer cd;
-    @FXML
-    Canvas canvas;
     @FXML
     Spinner<Integer> rows, cols;
     @FXML
     VBox forTask;
     @FXML
     VBox basicVariables;
-    @FXML
-    VBox unequals;
     @FXML
     Label forSolution;
     @FXML
@@ -46,6 +35,10 @@ public class MainSceneController implements Initializable {
     NodesFactory factory;
 
     TaskParser parser;
+
+    public void setParent(MainSceneController parent){
+        this.parent = parent;
+    }
 
     private void initSpinners() {
         rows.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 16, 3));
@@ -63,32 +56,16 @@ public class MainSceneController implements Initializable {
         mutableStartBasis.setToggleGroup(basis);
         artBasisMethod.selectedProperty().set(true);
     }
-    private void initCanvasDrawer(){
-        cd = new CanvasGraphDrawer(canvas);
-    }
-    private void initSaveManager() {
-        saveManager = new SaveManager();
-    }
 
-    @FXML
-    private void exit() {
-        Platform.exit();
-    }
-
-    @FXML
-    private void saveTask() {
-        if (isThereEmptyFilled()) {
+    public Task<? extends Number> getTaskForSave() {
+        if (areThereEmptyFields()) {
             Alerts.showError(Alerts.Causes.notFilled);
-            return;
+            return null;
         }
-        Task<?> task1 = parser.createDefaultTask(ametic, taskGrid, curRows, curCols);
-        saveManager.save(task1);
+        return parser.createDefaultTask(ametic, taskGrid, curRows, curCols);
     }
 
-    @FXML
-    private void openTask() {
-        Task<?> newTask = saveManager.open();
-        if (newTask == null) return;
+    public void setTask(Task<? extends Number> newTask) {
         if (newTask.getLimits().rows > 15 || newTask.getLimits().columns > 16) return;
         rows.getValueFactory().setValue(newTask.getLimits().rows);
         cols.getValueFactory().setValue(newTask.getLimits().columns);
@@ -106,18 +83,11 @@ public class MainSceneController implements Initializable {
         ametic = DoublArithmetic.instance;
     }
 
-    private void clearSolution() {
-        forTask.getChildren().removeIf((node -> node != taskGrid));
-        unequals.getChildren().clear();
-    }
-
-    @FXML
-    private void clearTask() {
+    public void clear() {
         forTask.getChildren().clear();
         taskGrid = factory.createInputTaskTable(curRows, curCols);
         forTask.getChildren().add(taskGrid);
         forSolution.setText("");
-        unequals.getChildren().clear();
     }
 
     @FXML
@@ -128,7 +98,7 @@ public class MainSceneController implements Initializable {
         }
         this.curRows = rows.getValue();
         this.curCols = cols.getValue();
-        clearTask();
+        clear();
         refillBasicVars();
     }
 
@@ -199,8 +169,6 @@ public class MainSceneController implements Initializable {
         changeDimension();
         setBasicVarsNotVisible();
         setOFArithmetic();
-        initSaveManager();
-        initCanvasDrawer();
     }
 
     @FXML
@@ -213,7 +181,7 @@ public class MainSceneController implements Initializable {
         basicVariables.setVisible(false);
     }
 
-    private boolean isThereEmptyFilled() {
+    private boolean areThereEmptyFields() {
         for (Node node : taskGrid.getChildren()) {
             if (node instanceof TextField && ((TextField) node).textProperty().isEmpty().get()) {
                 return true;
@@ -226,11 +194,10 @@ public class MainSceneController implements Initializable {
         return parser.fillTaskFunc(ametic, taskGrid, curCols);
     }
 
-    private void defineTask() {
-        clearSolution();
-        if (isThereEmptyFilled()) {
+    private void createTask() {
+        if (areThereEmptyFields()) {
             task = null;
-            Alerts.showError("");
+            Alerts.showError(Alerts.Causes.notFilled);
             return;
         }
         if (artBasisMethod.isSelected()) {
@@ -245,60 +212,27 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void createTask() {
-        defineTask();
-        Task<? extends Number> mainTask;
+    private void solveTask() {
+        createTask();
         if (task == null) return;
         try {
             if (task instanceof TaskABM) {
-                task.solve();
-                displayTask(task);
                 Number[] func = getFunction();
-                mainTask = new Task<>((TaskABM) task, func);
+                parent.solveTask((TaskABM<? extends Number>) task, func);
             } else {
-                mainTask = task;
+                parent.solveTask(task);
             }
+            parent.display();
         } catch (ClassCastException e) {
             Alerts.showCriticalError(e);
-            return;
-        }
-        mainTask.solve();
-        displayTask(mainTask);
-        displaySolution(mainTask);
-        if (curCols - curRows == 2) {
-            drawTask(mainTask);
         }
     }
 
-    private void displaySolution(Task<?> task) {
+    public void displaySolution(Task<?> task) {
         forSolution.setText("Solution\n" + task.getSolutionString());
     }
 
-    private void displayTask(Task<?> task) {
-        forTask.getChildren().add(factory.createTaskView(task));
-        for (SimplexTable<?> table : task.getSteps()) {
-            forTask.getChildren().add(factory.createSimplexTableView(table));
-        }
-        Label label = factory.l(task.getSolutionString());
-        label.getStyleClass().add("beer-color-background");
-        forTask.getChildren().add(label);
-    }
 
-    private void drawTask(Task<?> task) {
-        cd.setTask(task);
-        List<String> uneq = cd.getUnequals();
-        for(String s:uneq){
-            unequals.getChildren().add(factory.l(s));
-        }
-    }
 
-    @FXML
-    private void increaseGraphScale() {
-        cd.increaseInitInterval();
-    }
 
-    @FXML
-    private void decreaseGraphScale() {
-        cd.decreaseInitInterval();
-    }
 }

@@ -1,4 +1,4 @@
-package ru.ac.uniyar.katkov.simplexmethod.controllers.alerts;
+package ru.ac.uniyar.katkov.simplexmethod.presenters.alerts;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;

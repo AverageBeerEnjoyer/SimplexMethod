@@ -1,4 +1,4 @@
-package ru.ac.uniyar.katkov.simplexmethod.controllers.graphics;
+package ru.ac.uniyar.katkov.simplexmethod.presenters.graphics;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.chart.XYChart;
