@@ -4,22 +4,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="ru.ac.uniyar.katkov.simplexmethod.presenters.controllers.SimplexMethodController"
-      prefHeight="200.0" prefWidth="200.0" styleClass="beer-vibe">
-    <children>
-        <HBox layoutX="72.0" layoutY="74.0">
-            <children>
-                <VBox fx:id="forTask" fillWidth="false" minHeight="-Infinity"
-                      minWidth="-Infinity" styleClass="containers"/>
-                <Label fx:id="forSolution">
-                    <styleClass>
-                        <String fx:value="beer-color-background"/>
-                        <String fx:value="label"/>
-                    </styleClass>
-                </Label>
-            </children>
-        </HBox>
-    </children>
-</Pane>
+<ScrollPane minHeight="747.0" minWidth="1441.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.ac.uniyar.katkov.simplexmethod.presenters.controllers.SimplexMethodController">
+   <content>
+      <Pane minHeight="747.0" minWidth="1441.0" styleClass="beer-vibe" stylesheets="@css/main-scene.css">
+          <children>
+              <HBox layoutX="72.0" layoutY="74.0">
+                  <children>
+                      <VBox fx:id="forTask" fillWidth="false" minHeight="-Infinity" minWidth="-Infinity" styleClass="containers" />
+                      <Label fx:id="forSolution">
+                          <styleClass>
+                              <String fx:value="beer-color-background" />
+                              <String fx:value="label" />
+                          </styleClass>
+                      </Label>
+                  </children>
+              </HBox>
+            <Button layoutX="20.0" layoutY="22.0" mnemonicParsing="false" onAction="#reset" text="reset" />
+          </children>
+      </Pane>
+   </content>
+</ScrollPane>

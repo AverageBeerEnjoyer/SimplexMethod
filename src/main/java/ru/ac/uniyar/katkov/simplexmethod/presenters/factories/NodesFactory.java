@@ -11,20 +11,27 @@ import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.controllers.SimplexMethodController;
 
 import java.io.IOException;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class NodesFactory {
     private static NodesFactory instance;
-    public static NodesFactory getInstance(){
-        if(instance == null){
+
+    public static NodesFactory getInstance() {
+        if (instance == null) {
             instance = new NodesFactory();
         }
         return instance;
     }
 
-    public NodesFactory(){}
+    public NodesFactory() {
+    }
+
     public GridPane createInputTaskTable(int rows, int cols) {
         GridPane taskTable = Objects.requireNonNull(createTaskTable());
         for (int i = 0; i < cols; ++i) {
@@ -54,7 +61,7 @@ public class NodesFactory {
         }
     }
 
-    public <T extends Number> GridPane createSimplexTableView(SimplexTable<T> simplexTable) {
+    public <T extends Number> GridPane createSimplexTableView(SimplexTable<T> simplexTable, SimplexMethodController controller) {
         GridPane grid;
         try {
             grid = new FXMLLoader(ResourcesURLs.getInstance().simplexTableURL).load();
@@ -75,7 +82,19 @@ public class NodesFactory {
         grid.add(l(simplexTable.getVectorString()), 0, 0);
         for (int i = 0; i < matrix.rows; ++i) {
             for (int j = matrix.rows; j < matrix.columns; ++j) {
+                final int i1 = i;
+                final int j1 = j;
                 Label label = l(matrix.get(i, j).toString());
+                label.setOnMouseClicked((event -> {
+                    if(controller.nextTable(new Pair<>(i1, j1), simplexTable,grid)){
+                        grid.getChildren().forEach((child)-> {
+                            if(child!=label){
+                                child.setStyle("-fx-background-color: default");
+                            }
+                        });
+                        label.setStyle("-fx-background-color: #ffb900");
+                    };
+                }));
                 if (swap != null && i == swap.getKey() && j == swap.getValue()) {
                     label.setStyle("-fx-background-color: coral");
                 }
@@ -121,6 +140,11 @@ public class NodesFactory {
         label.setMinWidth(Region.USE_PREF_SIZE);
         label.prefHeight(Region.USE_COMPUTED_SIZE);
         label.prefWidth(Region.USE_COMPUTED_SIZE);
+        return label;
+    }
+    public Label beerL(String text){
+        Label label = l(text);
+        label.getStyleClass().add("beer-color-background");
         return label;
     }
 }

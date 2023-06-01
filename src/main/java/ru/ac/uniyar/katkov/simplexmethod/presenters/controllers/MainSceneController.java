@@ -82,8 +82,7 @@ public class MainSceneController implements Initializable {
 
     public void display() {
         graphicMethodController.drawTask(task);
-        simplexMethodController.displayTask(taskABM);
-        simplexMethodController.displayTask(task);
+        simplexMethodController.setTasks(taskABM, task);
         inputController.displaySolution(task);
     }
 

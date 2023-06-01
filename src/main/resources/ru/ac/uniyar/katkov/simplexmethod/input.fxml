@@ -1,99 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="ru.ac.uniyar.katkov.simplexmethod.presenters.controllers.InputController"
-      prefHeight="200.0" prefWidth="100.0">
+<VBox prefHeight="200.0" prefWidth="100.0" stylesheets="@css/main-scene.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.ac.uniyar.katkov.simplexmethod.presenters.controllers.InputController">
     <children>
-        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308"
-              maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-              prefHeight="96.0" prefWidth="982.0">
+        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="96.0" prefWidth="982.0">
             <children>
-                <Label text="Dimension"/>
+                <Label text="Dimension" />
                 <GridPane>
                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
-                                           prefWidth="100.0"/>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
-                                           prefWidth="100.0"/>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER"
-                                        vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER"
-                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label text="Rows"/>
-                        <Label text="Cols" GridPane.rowIndex="1"/>
-                        <Spinner fx:id="rows" GridPane.columnIndex="1"/>
-                        <Spinner fx:id="cols" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Rows" />
+                        <Label text="Cols" GridPane.rowIndex="1" />
+                        <Spinner fx:id="rows" GridPane.columnIndex="1" />
+                        <Spinner fx:id="cols" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
-                <Button mnemonicParsing="false" onAction="#changeDimension" text="Apply"/>
-                <Label text="Fractions:"/>
+                <Button mnemonicParsing="false" onAction="#changeDimension" text="Apply" />
+                <Label text="Fractions:" />
                 <VBox prefHeight="200.0" prefWidth="100.0" styleClass="containers">
                     <children>
-                        <RadioButton fx:id="ordinary" mnemonicParsing="false"
-                                     onAction="#setOFArithmetic" text="Ordinary"/>
-                        <RadioButton fx:id="decimal" mnemonicParsing="false"
-                                     onAction="#setDoublArithmetic" text="Decimal"/>
+                        <RadioButton fx:id="ordinary" mnemonicParsing="false" onAction="#setOFArithmetic" text="Ordinary" />
+                        <RadioButton fx:id="decimal" mnemonicParsing="false" onAction="#setDoublArithmetic" text="Decimal" />
                     </children>
                 </VBox>
-                <Label text="Basic vars"/>
+                <Label text="Basic vars" />
                 <VBox prefHeight="76.0" prefWidth="183.0" styleClass="containers">
                     <children>
-                        <RadioButton fx:id="mutableStartBasis" mnemonicParsing="false"
-                                     onAction="#setBasicVarsVisible" text="Choose"/>
-                        <RadioButton fx:id="artBasisMethod" mnemonicParsing="false"
-                                     onAction="#setBasicVarsNotVisible" text="artBasisMethod"/>
+                        <RadioButton fx:id="mutableStartBasis" mnemonicParsing="false" onAction="#setBasicVarsVisible" text="Choose" />
+                        <RadioButton fx:id="artBasisMethod" mnemonicParsing="false" onAction="#setBasicVarsNotVisible" text="artBasisMethod" />
                     </children>
                 </VBox>
-                <Button mnemonicParsing="false" onAction="#solveTask" prefHeight="62.0"
-                        prefWidth="98.0" text="Solve">
+                <Button mnemonicParsing="false" onAction="#solveTask" prefHeight="62.0" prefWidth="98.0" text="Solve">
                 </Button>
             </children>
             <styleClass>
-                <String fx:value="containers"/>
-                <String fx:value="top-hbox"/>
-                <String fx:value="hbox"/>
+                <String fx:value="containers" />
+                <String fx:value="top-hbox" />
+                <String fx:value="hbox" />
             </styleClass>
         </HBox>
         <HBox prefHeight="658.0" prefWidth="1411.0">
             <children>
-                <VBox fx:id="basicVariables" alignment="TOP_CENTER" maxHeight="-Infinity"
-                      maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                      prefHeight="650.0" prefWidth="134.0">
+                <VBox fx:id="basicVariables" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="134.0">
                     <children>
-                        <Label text="basis variables"/>
-                        <CheckBox mnemonicParsing="false" text="x1"/>
+                        <Label text="basis variables" />
+                        <CheckBox mnemonicParsing="false" text="x1" />
                     </children>
                     <styleClass>
-                        <String fx:value="containers"/>
-                        <String fx:value="left-vbox"/>
+                        <String fx:value="containers" />
+                        <String fx:value="left-vbox" />
                     </styleClass>
                 </VBox>
-                <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                            minWidth="-Infinity" pannable="true" prefHeight="651.0"
-                            prefWidth="1307.0">
+                <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="651.0" prefWidth="1307.0">
                     <content>
                         <Pane minHeight="649.0" minWidth="1305.0" styleClass="beer-vibe">
                             <children>
                                 <HBox layoutX="65.0" layoutY="62.0">
                                     <children>
-                                        <VBox fx:id="forTask" fillWidth="false"
-                                              minHeight="-Infinity" minWidth="-Infinity"
-                                              styleClass="containers"/>
+                                        <VBox fx:id="forTask" fillWidth="false" minHeight="-Infinity" minWidth="-Infinity" styleClass="containers" />
                                         <Label fx:id="forSolution">
                                             <styleClass>
-                                                <String fx:value="beer-color-background"/>
-                                                <String fx:value="label"/>
+                                                <String fx:value="beer-color-background" />
+                                                <String fx:value="label" />
                                             </styleClass>
                                         </Label>
                                     </children>

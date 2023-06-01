@@ -177,7 +177,7 @@ public class CanvasGraphDrawer {
             unequals.add("Can not draw in 2 dimensions");
             return;
         }
-        SimplexTable<?> table = getlast(task.getSteps());
+        SimplexTable<?> table = getlast(task.getBestSteps());
         Matrix<?> matrix = table.getCloneMatrix();
         int[] order = matrix.getOrder();
 

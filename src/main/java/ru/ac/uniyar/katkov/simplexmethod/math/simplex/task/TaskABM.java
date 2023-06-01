@@ -19,7 +19,7 @@ public class TaskABM<T extends Number> extends Task<T> {
     @Override
     protected void defineCondition() {
         if (isSolutionCorrect()) {
-            Optional<List<T>> sol = getlast(steps).getSolution();
+            Optional<List<T>> sol = getlast(bestSteps).getSolution();
             sol.ifPresent(ts -> solution = ts);
             condition = TaskCondition.HAS_SOLUTION;
         } else {
@@ -28,12 +28,12 @@ public class TaskABM<T extends Number> extends Task<T> {
     }
 
     private boolean isSolutionCorrect() {
-        SimplexTable<T> last = getlast(steps);
+        SimplexTable<T> last = getlast(bestSteps);
         return last.getCondition() == FINAL && !last.isArtificialVarsInBasis() && ametic.isZero(last.getFunctionValue());
     }
 
     public Matrix<T> getMatrixForNewTask() {
-        Matrix<T> last = getlast(steps).getCloneMatrix();
+        Matrix<T> last = getlast(bestSteps).getCloneMatrix();
         T[][] nums = ametic.empty2DimArray(last.rows, last.columns - last.rows);
         int[] newOrder = new int[last.columns - last.rows];
         for (int i = 0, tmp = 0; i < last.columns - last.rows && tmp < last.columns; ++i, ++tmp) {

@@ -19,6 +19,7 @@ public class Task<T extends Number> {
     public final Arithmetic<T> ametic;
     protected T[] targetFunction;
     protected Matrix<T> limits;
+    protected List<SimplexTable<T>> bestSteps;
     protected List<SimplexTable<T>> steps;
     protected List<T> solution;
     protected TaskCondition condition;
@@ -29,6 +30,7 @@ public class Task<T extends Number> {
         this.targetFunction = func;
         this.limits = taskABM.getMatrixForNewTask();
         this.condition = TaskCondition.NOT_SOLVED;
+        this.bestSteps = new ArrayList<>();
         this.steps = new ArrayList<>();
     }
 
@@ -37,22 +39,24 @@ public class Task<T extends Number> {
         this.targetFunction = targetFunction;
         this.limits = limits;
         this.condition = TaskCondition.NOT_SOLVED;
+        this.bestSteps = new ArrayList<>();
         this.steps = new ArrayList<>();
     }
 
     public void solve() {
-        if(condition!=TaskCondition.NOT_SOLVED) return;
-        SimplexTable<T> start = new SimplexTable<>(targetFunction.clone(), limits.clone());
+        if (condition != TaskCondition.NOT_SOLVED) return;
+        SimplexTable<T> start = new SimplexTable<>(targetFunction.clone(), limits.clone(), this);
+        bestSteps.add(start);
         steps.add(start);
-        while (getlast(steps).getCondition() == SimplexTableCondition.NOT_FINAL) {
-            SimplexTable<T> table = getlast(steps).next();
-            steps.add(table);
+        while (getlast(bestSteps).getCondition() == SimplexTableCondition.NOT_FINAL) {
+            SimplexTable<T> table = getlast(bestSteps).next();
+            bestSteps.add(table);
         }
         defineCondition();
     }
 
     protected void defineCondition() {
-        Optional<List<T>> solution = getlast(steps).getSolution();
+        Optional<List<T>> solution = getlast(bestSteps).getSolution();
         if (solution.isPresent()) {
             condition = TaskCondition.HAS_SOLUTION;
             this.solution = solution.get();
@@ -60,17 +64,25 @@ public class Task<T extends Number> {
             condition = TaskCondition.NOT_LIMITED;
         }
     }
-    private String solutionString(){
+
+    public void removeStepsSince(SimplexTable<? extends Number> table) {
+        int index = steps.indexOf(table);
+        while (steps.size() > index + 1) {
+            steps.remove(index + 1);
+        }
+    }
+
+    private String solutionString() {
         StringBuilder sb = new StringBuilder();
         sb.append("x* = (");
-        for (int i=0;i<solution.size();++i) {
+        for (int i = 0; i < solution.size(); ++i) {
             sb.append(solution.get(i).toString());
-            if(i!= solution.size()-1){
+            if (i != solution.size() - 1) {
                 sb.append(", ");
             }
         }
         sb.append(")\n");
-        sb.append("function value: ").append(ametic.revert(getlast(steps).getFunctionValue()));
+        sb.append("function value: ").append(ametic.revert(getlast(bestSteps).getFunctionValue()));
         return sb.toString();
     }
 
@@ -98,8 +110,8 @@ public class Task<T extends Number> {
         return null;
     }
 
-    public List<SimplexTable<T>> getSteps() {
-        return steps;
+    public List<SimplexTable<T>> getBestSteps() {
+        return bestSteps;
     }
 
     public Matrix<T> getLimits() {
@@ -137,7 +149,7 @@ public class Task<T extends Number> {
         cols = Integer.parseInt(split[2]);
         int it = 3;
 
-        T[] targetFunc =ametic.emptyArray (cols+1);
+        T[] targetFunc = ametic.emptyArray(cols + 1);
         for (int i = 0; i < targetFunc.length; ++i) {
             targetFunc[i] = ametic.parse(split[it]);
             ++it;
@@ -151,12 +163,16 @@ public class Task<T extends Number> {
             }
         }
 
-        T[] ext =  ametic.emptyArray(rows);
+        T[] ext = ametic.emptyArray(rows);
         for (int i = 0; i < ext.length; ++i) {
             ext[i] = ametic.parse(split[it]);
             ++it;
         }
         Matrix<T> matrix = new Matrix<>(limits, ext);
         return new Task<>(targetFunc, matrix);
+    }
+
+    public TaskCondition getCondition() {
+        return condition;
     }
 }
