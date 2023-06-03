@@ -52,6 +52,7 @@ public class GraphicMethodController implements Initializable {
     }
 
     public void drawTask(Task<?> task) {
+        clear();
         cd.setTask(task);
         List<String> uneq = cd.getUnequals();
         for(String s:uneq){

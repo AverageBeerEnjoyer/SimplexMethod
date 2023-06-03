@@ -75,6 +75,7 @@ public class SimplexMethodController implements Initializable {
 
     public void setTasks(TaskABM<? extends Number> taskABM, Task<? extends Number> task) {
         if (task == null) return;
+        clear();
         this.taskABM = taskABM;
         this.task = task;
         if (taskABM != null) {

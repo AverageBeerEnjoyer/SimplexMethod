@@ -28,7 +28,8 @@ public class InputController implements Initializable {
     @FXML
     Label forSolution;
     @FXML
-    RadioButton ordinary, decimal, artBasisMethod, mutableStartBasis;
+    RadioButton ordinary, decimal,
+                artBasisMethod, mutableStartBasis;
     GridPane taskGrid;
     Task<? extends Number> task;
     Arithmetic<? extends Number> ametic;
@@ -36,7 +37,7 @@ public class InputController implements Initializable {
 
     TaskParser parser;
 
-    public void setParent(MainSceneController parent){
+    public void setParent(MainSceneController parent) {
         this.parent = parent;
     }
 
@@ -200,14 +201,18 @@ public class InputController implements Initializable {
             Alerts.showError(Alerts.Causes.notFilled);
             return;
         }
-        if (artBasisMethod.isSelected()) {
-            task = parser.createABMTaskFromGrid(ametic, taskGrid, curRows, curCols);
-        } else {
-            if (countSelectedCheckbox() == curRows) {
-                task = parser.createTaskWithChosenBasisFromGrid(ametic, taskGrid, getChosenBasicOrder(), curRows, curCols);
+        try {
+            if (artBasisMethod.isSelected()) {
+                task = parser.createABMTaskFromGrid(ametic, taskGrid, curRows, curCols);
             } else {
-                Alerts.showError("Choose more basic variables");
+                if (countSelectedCheckbox() == curRows) {
+                    task = parser.createTaskWithChosenBasisFromGrid(ametic, taskGrid, getChosenBasicOrder(), curRows, curCols);
+                } else {
+                    Alerts.showError("Choose more basic variables");
+                }
             }
+        }catch (NumberFormatException e){
+            Alerts.showError(Alerts.Causes.wrongInput);
         }
     }
 
@@ -223,6 +228,8 @@ public class InputController implements Initializable {
                 parent.solveTask(task);
             }
             parent.display();
+        } catch (NumberFormatException e) {
+            Alerts.showError(Alerts.Causes.wrongInput);
         } catch (ClassCastException e) {
             Alerts.showCriticalError(e);
         }
@@ -231,8 +238,6 @@ public class InputController implements Initializable {
     public void displaySolution(Task<?> task) {
         forSolution.setText("Solution\n" + task.getSolutionString());
     }
-
-
 
 
 }

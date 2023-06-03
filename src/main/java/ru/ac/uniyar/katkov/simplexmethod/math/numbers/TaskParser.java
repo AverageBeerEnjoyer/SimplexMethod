@@ -71,10 +71,9 @@ public class TaskParser {
 
     public <T extends Number> T[] fillTaskFunc(Arithmetic<T> ametic, GridPane gridPane, int cols) {
         T[] func = ametic.emptyArray(cols + 1);
-        for (int j = 0; j < cols; ++j) {
+        for (int j = 0; j < cols+1; ++j) {
             func[j] = parseNumber(ametic, 1, j + 1, gridPane);
         }
-        func[cols] = ametic.zero();
         return func;
     }
 
@@ -125,7 +124,7 @@ public class TaskParser {
             if(textField == null) return;
             textField.textProperty().setValue(task.getLimits().getExt(i).toString());
         }
-        for(int i=0;i<task.getLimits().columns;++i){
+        for(int i=0;i<task.getTargetFunction().length;++i){
             TextField textField = (TextField) getFromGridRowCol(1,i+1,gridPane);
             if(textField == null) return;
             textField.textProperty().setValue(task.getTargetFunction()[i].toString());

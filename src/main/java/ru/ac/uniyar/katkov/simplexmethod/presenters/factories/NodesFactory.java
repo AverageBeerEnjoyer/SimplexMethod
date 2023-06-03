@@ -14,10 +14,7 @@ import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.presenters.controllers.SimplexMethodController;
 
 import java.io.IOException;
-import java.lang.reflect.Executable;
-import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.function.Function;
 
 public class NodesFactory {
     private static NodesFactory instance;
@@ -36,14 +33,13 @@ public class NodesFactory {
         GridPane taskTable = Objects.requireNonNull(createTaskTable());
         for (int i = 0; i < cols; ++i) {
             taskTable.add(new Label("x" + (i + 1)), i + 1, 0);
-            taskTable.add(new TextField(), i + 1, 1);
         }
+        taskTable.add(new Label("b"),cols+1,0);
         taskTable.add(new Label("-> min"), cols + 2, 1);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                taskTable.add(new TextField(), j + 1, i + 2);
+        for (int i = 0; i < rows+1; ++i) {
+            for (int j = 0; j < cols+1; ++j) {
+                taskTable.add(new TextField(), j + 1, i + 1);
             }
-            taskTable.add(new TextField(), cols + 1, i + 2);
         }
         for (ColumnConstraints col : taskTable.getColumnConstraints()) {
             col.setPrefWidth(75);
@@ -93,7 +89,7 @@ public class NodesFactory {
                             }
                         });
                         label.setStyle("-fx-background-color: #ffb900");
-                    };
+                    }
                 }));
                 if (swap != null && i == swap.getKey() && j == swap.getValue()) {
                     label.setStyle("-fx-background-color: coral");

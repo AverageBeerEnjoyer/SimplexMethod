@@ -82,7 +82,7 @@ public class Task<T extends Number> {
             }
         }
         sb.append(")\n");
-        sb.append("function value: ").append(ametic.revert(getlast(bestSteps).getFunctionValue()));
+        sb.append("function value: ").append(getlast(bestSteps).getFunctionValue());
         return sb.toString();
     }
 

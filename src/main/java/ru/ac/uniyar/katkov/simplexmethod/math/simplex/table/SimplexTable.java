@@ -49,7 +49,7 @@ public class SimplexTable<T extends Number> {
             for (int j = matrix.rows; j < matrix.columns; ++j) {
                 func[order[j]] = ametic.minus(func[order[j]], ametic.multiply(func[order[i]], matrix.get(i, j)));
             }
-            func[matrix.columns] = ametic.minus(func[matrix.columns], ametic.multiply(func[order[i]], matrix.getExt(i)));
+            func[matrix.columns] = ametic.plus(func[matrix.columns], ametic.multiply(func[order[i]], matrix.getExt(i)));
             func[order[i]] = ametic.zero();
         }
     }
