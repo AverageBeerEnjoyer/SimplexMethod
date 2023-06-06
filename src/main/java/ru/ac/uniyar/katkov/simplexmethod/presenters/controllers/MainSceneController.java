@@ -110,6 +110,11 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
+    private void help(){
+        SceneManager.getInstance().getHelpStage().show();
+    }
+
+    @FXML
     private void exit() {
         Platform.exit();
     }

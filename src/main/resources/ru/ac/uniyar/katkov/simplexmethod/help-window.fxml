@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+  <content>
+      <Pane prefHeight="964.0" prefWidth="1176.0" styleClass="beer-vibe" stylesheets="@css/main-scene.css">
+         <children>
+            <VBox>
+               <children>
+                  <ImageView fitHeight="490.0" fitWidth="985.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pictures/input-help.jpg" />
+                     </image>
+                  </ImageView>
+               </children>
+            </VBox>
+            <TextArea editable="false" layoutX="38.0" layoutY="420.0" prefHeight="326.0" prefWidth="620.0" text="1) вкладка для ввода данных задачи&#10;2) вкладка с ходом симплекс метода&#10;3) вкладка с графическим методом&#10;4) размерность матрицы ограничений&#10;&#9;* Rows - количество строк(ограничений)&#10;&#9;* Cols - количество столбцов(переменных)&#10;  после установки значений необходимо нажать на &quot;Apply&quot; для применения изменений&#10;5) формат чисел, которые будут в задаче:&#10;&#9;* Ordinary - обыкновенные дроби ( 1/2 , 10/3 , 5 )&#10;&#9;* Decimal - десятичные дроби ( 0.5 , 3.33333333 , 5)&#10;6) способ выбора начального базиса:&#10;&#9;* Choose - выбрать вручную (см. 6.а)&#10;&#9;* artBasisMethod - использовать метод искусственного базиса&#10;6.а) список переменных для выбора начального базиса&#10;7) кнопка, нажатие на которую запускает решение задачи, нажимать после ввода всех данных&#10;8) решение задачи&#10;9) место ввода данных функции&#10;10) место ввода данных матрицы ограниченый" />
+         </children>
+      </Pane>
+  </content>
+</ScrollPane>

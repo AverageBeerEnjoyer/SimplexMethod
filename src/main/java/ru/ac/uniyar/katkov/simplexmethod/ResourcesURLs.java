@@ -12,6 +12,7 @@ public class ResourcesURLs {
     public final URL simplexMethodURL;
     public final URL graphicMethodURL;
     public final URL inputURL;
+    public final URL helpSceneURL;
 
     public static ResourcesURLs getInstance() {
         if (instance == null) {
@@ -27,5 +28,6 @@ public class ResourcesURLs {
         simplexMethodURL = getClass().getResource("simplex-method.fxml");
         graphicMethodURL = getClass().getResource("graphic-method.fxml");
         inputURL = getClass().getResource("input.fxml");
+        helpSceneURL = getClass().getResource("help-window.fxml");
     }
 }
