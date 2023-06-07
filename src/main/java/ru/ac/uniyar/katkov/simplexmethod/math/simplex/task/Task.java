@@ -23,24 +23,29 @@ public class Task<T extends Number> {
     protected List<SimplexTable<T>> steps;
     protected List<T> solution;
     protected TaskCondition condition;
+    protected boolean min;
 
     public Task(TaskABM<T> taskABM, T[] func) {
+        this(taskABM.ametic, taskABM.getMatrixForNewTask(), func, taskABM.min);
         if (taskABM.condition != TaskCondition.HAS_SOLUTION) throw new IllegalArgumentException();
-        ametic = taskABM.ametic;
-        this.targetFunction = func;
-        this.limits = taskABM.getMatrixForNewTask();
-        this.condition = TaskCondition.NOT_SOLVED;
-        this.bestSteps = new ArrayList<>();
-        this.steps = new ArrayList<>();
     }
 
-    public Task(T[] targetFunction, Matrix<T> limits) {
-        this.ametic = limits.ametic;
-        this.targetFunction = targetFunction;
-        this.limits = limits;
+    private Task(Arithmetic<T> ametic, Matrix<T> limits, T[] targetFunction, boolean min) {
+        bestSteps = new ArrayList<>();
+        steps = new ArrayList<>();
+        this.ametic = ametic;
         this.condition = TaskCondition.NOT_SOLVED;
-        this.bestSteps = new ArrayList<>();
-        this.steps = new ArrayList<>();
+        this.limits = limits;
+        this.targetFunction = targetFunction;
+        this.min = min;
+        if (!(this instanceof TaskABM) && !min) {
+            reversTargetFunction();
+        }
+    }
+
+
+    public Task(T[] targetFunction, Matrix<T> limits, boolean min) {
+        this(limits.ametic, limits, targetFunction, min);
     }
 
     public void solve() {
@@ -53,6 +58,12 @@ public class Task<T extends Number> {
             bestSteps.add(table);
         }
         defineCondition();
+    }
+
+    private void reversTargetFunction() {
+        for (int i = 0; i < targetFunction.length; ++i) {
+            targetFunction[i] = ametic.revert(targetFunction[i]);
+        }
     }
 
     protected void defineCondition() {
@@ -82,7 +93,13 @@ public class Task<T extends Number> {
             }
         }
         sb.append(")\n");
-        sb.append("function value: ").append(getlast(bestSteps).getFunctionValue());
+        sb.append("function value: ");
+        T res = getlast(bestSteps).getFunctionValue();
+        if (min) {
+            sb.append(res);
+        } else{
+            sb.append(ametic.revert(res));
+        }
         return sb.toString();
     }
 
@@ -169,7 +186,7 @@ public class Task<T extends Number> {
             ++it;
         }
         Matrix<T> matrix = new Matrix<>(limits, ext);
-        return new Task<>(targetFunc, matrix);
+        return new Task<>(targetFunc, matrix, true);
     }
 
     public TaskCondition getCondition() {

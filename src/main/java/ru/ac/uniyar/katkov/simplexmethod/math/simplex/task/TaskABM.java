@@ -12,8 +12,8 @@ import static ru.ac.uniyar.katkov.simplexmethod.Utils.getlast;
 import static ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.SimplexTableCondition.FINAL;
 
 public class TaskABM<T extends Number> extends Task<T> {
-    public TaskABM(T[] targetFunction, Matrix<T> limits) {
-        super(targetFunction, limits);
+    public TaskABM(T[] targetFunction, Matrix<T> limits, boolean min) {
+        super(targetFunction, limits, min);
     }
 
     @Override

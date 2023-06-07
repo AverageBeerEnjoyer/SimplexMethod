@@ -29,7 +29,9 @@ public class InputController implements Initializable {
     Label forSolution;
     @FXML
     RadioButton ordinary, decimal,
-                artBasisMethod, mutableStartBasis;
+            artBasisMethod, mutableStartBasis,
+            min, max;
+
     GridPane taskGrid;
     Task<? extends Number> task;
     Arithmetic<? extends Number> ametic;
@@ -56,6 +58,15 @@ public class InputController implements Initializable {
         artBasisMethod.setToggleGroup(basis);
         mutableStartBasis.setToggleGroup(basis);
         artBasisMethod.selectedProperty().set(true);
+
+        ToggleGroup extr = new ToggleGroup();
+        max.setToggleGroup(extr);
+        min.setToggleGroup(extr);
+        min.selectedProperty().set(true);
+    }
+
+    private boolean getExtr() {
+        return min.isSelected();
     }
 
     public Task<? extends Number> getTaskForSave() {
@@ -63,7 +74,7 @@ public class InputController implements Initializable {
             Alerts.showError(Alerts.Causes.notFilled);
             return null;
         }
-        return parser.createDefaultTask(ametic, taskGrid, curRows, curCols);
+        return parser.createDefaultTask(ametic, taskGrid, curRows, curCols, true);
     }
 
     public void setTask(Task<? extends Number> newTask) {
@@ -203,15 +214,15 @@ public class InputController implements Initializable {
         }
         try {
             if (artBasisMethod.isSelected()) {
-                task = parser.createABMTaskFromGrid(ametic, taskGrid, curRows, curCols);
+                task = parser.createABMTaskFromGrid(ametic, taskGrid, curRows, curCols, getExtr());
             } else {
                 if (countSelectedCheckbox() == curRows) {
-                    task = parser.createTaskWithChosenBasisFromGrid(ametic, taskGrid, getChosenBasicOrder(), curRows, curCols);
+                    task = parser.createTaskWithChosenBasisFromGrid(ametic, taskGrid, getChosenBasicOrder(), curRows, curCols, getExtr());
                 } else {
                     Alerts.showError("Choose more basic variables");
                 }
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             Alerts.showError(Alerts.Causes.wrongInput);
         }
     }

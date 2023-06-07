@@ -35,7 +35,6 @@ public class NodesFactory {
             taskTable.add(new Label("x" + (i + 1)), i + 1, 0);
         }
         taskTable.add(new Label("b"),cols+1,0);
-        taskTable.add(new Label("-> min"), cols + 2, 1);
         for (int i = 0; i < rows+1; ++i) {
             for (int j = 0; j < cols+1; ++j) {
                 taskTable.add(new TextField(), j + 1, i + 1);

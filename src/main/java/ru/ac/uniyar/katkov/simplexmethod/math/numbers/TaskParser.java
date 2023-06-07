@@ -10,35 +10,37 @@ import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
 
 public class TaskParser {
     private static TaskParser instance;
-    public static TaskParser getInstance(){
-        if(instance == null){
+
+    public static TaskParser getInstance() {
+        if (instance == null) {
             instance = new TaskParser();
         }
         return instance;
     }
 
-    private TaskParser(){}
+    private TaskParser() {
+    }
 
-    public <T extends Number> Task<T> createTaskWithChosenBasisFromGrid(Arithmetic<T> ametic, GridPane gridPane, int[] order, int rows, int cols) {
-        Task<T> task = createDefaultTask(ametic, gridPane, rows, cols);
+    public <T extends Number> Task<T> createTaskWithChosenBasisFromGrid(Arithmetic<T> ametic, GridPane gridPane, int[] order, int rows, int cols, boolean min) {
+        Task<T> task = createDefaultTask(ametic, gridPane, rows, cols, min);
         for (int i = 0; i < rows; ++i) {
             task.getLimits().swapColumns(i, order[i]);
         }
         return task;
     }
 
-    public <T extends Number> Task<T> createDefaultTask(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols) {
+    public <T extends Number> Task<T> createDefaultTask(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols, boolean min) {
         Matrix<T> matrix = fillTaskLimits(ametic, gridPane, rows, cols);
         T[] func = fillTaskFunc(ametic, gridPane, cols);
-        return new Task<>(func, matrix);
+        return new Task<>(func, matrix, min);
     }
 
-    public <T extends Number> TaskABM<T> createABMTaskFromGrid(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols) {
+    public <T extends Number> TaskABM<T> createABMTaskFromGrid(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols, boolean min) {
         Matrix<T> m = fillTaskLimits(ametic, gridPane, rows, cols);
         m.prepareToABM();
         Matrix<T> abmMatrix = fillABMLimits(ametic, m, rows, cols);
         T[] func = fillABMTaskFunc(ametic, rows, cols);
-        return new TaskABM<>(func, abmMatrix );
+        return new TaskABM<>(func, abmMatrix, min);
     }
 
     private <T extends Number> T parseNumber(Arithmetic<? extends T> ametic, int row, int col, GridPane gridPane) {
@@ -71,7 +73,7 @@ public class TaskParser {
 
     public <T extends Number> T[] fillTaskFunc(Arithmetic<T> ametic, GridPane gridPane, int cols) {
         T[] func = ametic.emptyArray(cols + 1);
-        for (int j = 0; j < cols+1; ++j) {
+        for (int j = 0; j < cols + 1; ++j) {
             func[j] = parseNumber(ametic, 1, j + 1, gridPane);
         }
         return func;
@@ -113,20 +115,20 @@ public class TaskParser {
         return func;
     }
 
-    public void setTaskToGrid(Task<?> task, GridPane gridPane){
-        for(int i=0;i<task.getLimits().rows;++i){
-            for(int j=0;j<task.getLimits().columns;++j){
-                TextField textField = (TextField) getFromGridRowCol(i+2,j+1,gridPane);
-                if(textField == null) return;
-                textField.textProperty().setValue(task.getLimits().get(i,j).toString());
+    public void setTaskToGrid(Task<?> task, GridPane gridPane) {
+        for (int i = 0; i < task.getLimits().rows; ++i) {
+            for (int j = 0; j < task.getLimits().columns; ++j) {
+                TextField textField = (TextField) getFromGridRowCol(i + 2, j + 1, gridPane);
+                if (textField == null) return;
+                textField.textProperty().setValue(task.getLimits().get(i, j).toString());
             }
-            TextField textField = (TextField) getFromGridRowCol(i+2,task.getLimits().columns+1,gridPane);
-            if(textField == null) return;
+            TextField textField = (TextField) getFromGridRowCol(i + 2, task.getLimits().columns + 1, gridPane);
+            if (textField == null) return;
             textField.textProperty().setValue(task.getLimits().getExt(i).toString());
         }
-        for(int i=0;i<task.getTargetFunction().length;++i){
-            TextField textField = (TextField) getFromGridRowCol(1,i+1,gridPane);
-            if(textField == null) return;
+        for (int i = 0; i < task.getTargetFunction().length; ++i) {
+            TextField textField = (TextField) getFromGridRowCol(1, i + 1, gridPane);
+            if (textField == null) return;
             textField.textProperty().setValue(task.getTargetFunction()[i].toString());
         }
     }

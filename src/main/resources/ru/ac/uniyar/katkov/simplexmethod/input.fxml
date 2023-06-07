@@ -40,6 +40,12 @@
                         <RadioButton fx:id="artBasisMethod" mnemonicParsing="false" onAction="#setBasicVarsNotVisible" text="artBasisMethod" />
                     </children>
                 </VBox>
+            <VBox prefHeight="76.0" prefWidth="126.0" styleClass="containers">
+               <children>
+                  <RadioButton fx:id="min" mnemonicParsing="false" text="-&gt; min" />
+                  <RadioButton fx:id="max" mnemonicParsing="false" text="-&gt; max" />
+               </children>
+            </VBox>
                 <Button mnemonicParsing="false" onAction="#solveTask" prefHeight="62.0" prefWidth="98.0" text="Solve">
                 </Button>
             </children>
