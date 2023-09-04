@@ -13,14 +13,14 @@ import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
 import ru.ac.uniyar.katkov.simplexmethod.presenters.alerts.Alerts;
-import ru.ac.uniyar.katkov.simplexmethod.presenters.factories.NodesFactory;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.factories.LabelsFactory;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.factories.SimplexTableViewFactory;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.factories.TaskTableFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class SimplexMethodController implements Initializable {
-    private MainSceneController parent;
-    private NodesFactory factory;
     private Task<? extends Number> task;
     private TaskABM<? extends Number> taskABM;
 
@@ -30,13 +30,7 @@ public class SimplexMethodController implements Initializable {
     private VBox forTask;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        factory = NodesFactory.getInstance();
-    }
-
-    public void setParent(MainSceneController parent) {
-        this.parent = parent;
-    }
+    public void initialize(URL location, ResourceBundle resources) {}
 
 
 
@@ -62,10 +56,10 @@ public class SimplexMethodController implements Initializable {
         clearLayoutSince(gridPane);
         task1.removeStepsSince(newTable);
 
-        forTask.getChildren().add(factory.createSimplexTableView(newTable, this));
+        forTask.getChildren().add(SimplexTableViewFactory.createSimplexTableView(newTable, this));
         if(newTable.getCondition()!=SimplexTableCondition.NOT_FINAL){
 
-            forTask.getChildren().add(factory.beerL(task1.getSolutionString()));
+            forTask.getChildren().add(LabelsFactory.beerL(task1.getSolutionString()));
             if(taskABM==task1 && task1.getCondition()== TaskCondition.HAS_SOLUTION){
                 displayTask(task);
             }
@@ -86,11 +80,11 @@ public class SimplexMethodController implements Initializable {
 
     public void displayTask(Task<? extends Number> task) {
         if (task == null) return;
-        forTask.getChildren().add(factory.createTaskView(task));
+        forTask.getChildren().add(TaskTableFactory.createTaskView(task));
         for (SimplexTable<?> table : task.getBestSteps()) {
-            forTask.getChildren().add(factory.createSimplexTableView(table, this));
+            forTask.getChildren().add(SimplexTableViewFactory.createSimplexTableView(table, this));
         }
-        Label label = factory.beerL(task.getSolutionString());
+        Label label = LabelsFactory.beerL(task.getSolutionString());
         forTask.getChildren().add(label);
         displaySolution(task);
     }

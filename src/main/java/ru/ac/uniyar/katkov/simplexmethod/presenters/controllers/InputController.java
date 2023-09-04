@@ -7,11 +7,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import ru.ac.uniyar.katkov.simplexmethod.presenters.alerts.Alerts;
-import ru.ac.uniyar.katkov.simplexmethod.presenters.factories.NodesFactory;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.*;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
+import ru.ac.uniyar.katkov.simplexmethod.presenters.factories.TaskTableFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,7 +35,6 @@ public class InputController implements Initializable {
     GridPane taskGrid;
     Task<? extends Number> task;
     Arithmetic<? extends Number> ametic;
-    NodesFactory factory;
 
     TaskParser parser;
 
@@ -97,7 +96,7 @@ public class InputController implements Initializable {
 
     public void clear() {
         forTask.getChildren().clear();
-        taskGrid = factory.createInputTaskTable(curRows, curCols);
+        taskGrid = TaskTableFactory.createInputTaskTable(curRows, curCols);
         forTask.getChildren().add(taskGrid);
         forSolution.setText("");
     }
@@ -175,7 +174,6 @@ public class InputController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         parser = TaskParser.getInstance();
-        factory = NodesFactory.getInstance();
         initSpinners();
         initButtons();
         changeDimension();

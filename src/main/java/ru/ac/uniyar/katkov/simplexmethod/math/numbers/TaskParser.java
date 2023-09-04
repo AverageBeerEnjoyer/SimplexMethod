@@ -1,11 +1,12 @@
 package ru.ac.uniyar.katkov.simplexmethod.math.numbers;
 
-import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.TaskABM;
+
+import static ru.ac.uniyar.katkov.simplexmethod.Utils.getFromGridRowCol;
 
 
 public class TaskParser {
@@ -51,13 +52,7 @@ public class TaskParser {
         return ametic.parse(tf.getText());
     }
 
-    private Node getFromGridRowCol(int row, int col, GridPane gridPane) {
-        for (Node child : gridPane.getChildren()) {
-            if (GridPane.getRowIndex(child) == row && GridPane.getColumnIndex(child) == col)
-                return child;
-        }
-        return null;
-    }
+
 
     public <T extends Number> Matrix<T> fillTaskLimits(Arithmetic<T> ametic, GridPane gridPane, int rows, int cols) {
         T[][] limits = ametic.empty2DimArray(rows, cols);

@@ -41,4 +41,6 @@ public abstract class Arithmetic<T extends Number> {
     public abstract T[][] empty2DimArray(int n, int m);
 
     public abstract int compare(T a, T b);
+
+    public abstract T cast(int n);
 }

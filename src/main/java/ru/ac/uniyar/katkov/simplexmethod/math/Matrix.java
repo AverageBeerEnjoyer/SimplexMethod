@@ -99,7 +99,7 @@ public class Matrix<T extends Number> implements Cloneable {
     public void prepareToABM() {
         for (int i = 0; i < rows; ++i) {
             if (ametic.compare(extension[i],ametic.zero()) < 0) {
-                multiplyRow(i, ametic.parse("-1"));
+                multiplyRow(i, ametic.cast(-1));
             }
         }
     }

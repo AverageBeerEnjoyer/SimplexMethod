@@ -46,14 +46,12 @@ public class MainSceneController implements Initializable {
         Node graphicMethodRoot = graphicMethodLoader.getRoot();
         graphicMethod.setContent(graphicMethodRoot);
         graphicMethodController = graphicMethodLoader.getController();
-        graphicMethodController.setParent(this);
 
         FXMLLoader simplexMethodLoader = new FXMLLoader(ResourcesURLs.getInstance().simplexMethodURL);
         simplexMethodLoader.load();
         Node simplexMethodRoot = simplexMethodLoader.getRoot();
         simplexMethod.setContent(simplexMethodRoot);
         simplexMethodController = simplexMethodLoader.getController();
-        simplexMethodController.setParent(this);
     }
 
     @Override

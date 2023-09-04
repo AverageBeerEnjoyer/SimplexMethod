@@ -98,6 +98,11 @@ public class OFArithmetic extends Arithmetic<OrdinaryFraction> {
     }
 
     @Override
+    public OrdinaryFraction cast(int n) {
+        return new OrdinaryFraction(n,1);
+    }
+
+    @Override
     public String toString() {
         return "OF";
     }

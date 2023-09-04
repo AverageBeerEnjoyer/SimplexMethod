@@ -7,6 +7,7 @@ import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Arithmetic;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
 import ru.ac.uniyar.katkov.simplexmethod.math.numbers.Number;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.SimplexTableCondition;
+import ru.ac.uniyar.katkov.simplexmethod.math.simplex.conditions.SwapAbility;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class SimplexTable<T extends Number> {
     protected final Matrix<T> matrix;
     protected List<T> vector;
     protected SimplexTableCondition condition;
+    protected SwapAbility[][] swapAbility;
 
     private Pair<Integer, Integer> swapElement;
 
@@ -36,6 +38,8 @@ public class SimplexTable<T extends Number> {
         countTargetFunction();
         countVector();
         defineCondition();
+        swapElement = choseSwapElements();
+        countSwapAbility();
     }
 
     protected void basicVariables() {
@@ -50,20 +54,20 @@ public class SimplexTable<T extends Number> {
                 func[order[j]] = ametic.minus(func[order[j]], ametic.multiply(func[order[i]], matrix.get(i, j)));
             }
             func[matrix.columns] = ametic.plus(func[matrix.columns], ametic.multiply(func[order[i]], matrix.getExt(i)));
-            func[order[i]] = ametic.zero();
+            func[order[i]] = ametic.cast(0);
         }
     }
 
     private void countVector() {
         this.vector = new ArrayList<>(matrix.columns);
         for (int i = 0; i < matrix.columns; ++i) {
-            vector.add(ametic.zero());
+            vector.add(ametic.cast(0));
         }
         for (int i = 0; i < matrix.rows; ++i) {
             vector.set(matrix.getOrder()[i], matrix.getExt(i));
         }
         for (int i = matrix.rows; i < matrix.columns; ++i) {
-            vector.set(matrix.getOrder()[i], ametic.zero());
+            vector.set(matrix.getOrder()[i], ametic.cast(0));
         }
     }
 
@@ -72,10 +76,10 @@ public class SimplexTable<T extends Number> {
         boolean finalTable = true;
         int[] order = matrix.getOrder();
         for (int i = matrix.rows; i < matrix.columns; ++i) {
-            if (ametic.compare(func[order[i]], ametic.zero()) < 0) {
+            if (ametic.compare(func[order[i]], ametic.cast(0)) < 0) {
                 finalTable = false;
                 for (int j = 0; j < matrix.rows; ++j) {
-                    if (ametic.compare(matrix.get(j, i), ametic.zero()) > 0) {
+                    if (ametic.compare(matrix.get(j, i), ametic.cast(0)) > 0) {
                         noLimit = false;
                         break;
                     }
@@ -114,16 +118,36 @@ public class SimplexTable<T extends Number> {
     }
 
     public SimplexTable<T> next() {
-        swapElement = choseSwapElements();
         return next(swapElement);
+    }
+
+    private void countSwapAbility() {
+        int[] order = matrix.getOrder();
+        swapAbility = new SwapAbility[matrix.rows][matrix.columns - matrix.rows];
+        for (int i = 0; i < matrix.rows; ++i) {
+            Arrays.fill(swapAbility[i], SwapAbility.NO);
+        }
+        if(condition != SimplexTableCondition.NOT_FINAL) return;
+        for (int i = matrix.rows; i < matrix.columns; ++i) {
+            boolean notNegative = ametic.compare(func[order[i]], ametic.cast(0)) != -1;
+            if (notNegative) continue;
+            int row = choseRowToSwap(i);
+            if(row == -1) continue;
+            swapAbility[row][i-matrix.rows] = SwapAbility.YES;
+        }
+        swapAbility[swapElement.getKey()][swapElement.getValue()-matrix.rows] = SwapAbility.BEST;
+    }
+
+    public SwapAbility getSwapAbility(int i, int j) {
+        return swapAbility[i][j];
     }
 
     private int choseRowToSwap(int colToSwap) {
         int rowToSwap = -1;
-        T max = ametic.zero();
+        T max = ametic.cast(0);
         for (int i = 0; i < matrix.rows; ++i) {
             T el = matrix.get(i, colToSwap);
-            if (ametic.compare(el, ametic.zero()) < 0) continue;
+            if (ametic.compare(el, ametic.cast(0)) < 0) continue;
             T ext = matrix.getExt(i);
             if (ametic.isZero(ext)) return i;
             el = ametic.divide(el, ext);
@@ -198,7 +222,7 @@ public class SimplexTable<T extends Number> {
             StringBuilder sb = new StringBuilder();
             for (int j = matrix.rows; j < matrix.columns; ++j) {
                 T el = matrix.get(i, j);
-                switch (ametic.compare(el, ametic.zero())) {
+                switch (ametic.compare(el, ametic.cast(0))) {
                     case -1 -> {
                         if (j != matrix.rows) {
                             sb.append(" + ");
@@ -218,7 +242,7 @@ public class SimplexTable<T extends Number> {
                 }
             }
             T el = matrix.getExt(i);
-            switch (ametic.compare(el, ametic.zero())) {
+            switch (ametic.compare(el, ametic.cast(0))) {
                 case -1 -> {
                     sb.append(" - ");
                     sb.append(ametic.revert(el));
@@ -234,6 +258,10 @@ public class SimplexTable<T extends Number> {
             res.add(sb.toString());
         }
         return res;
+    }
+
+    public Matrix<T> getMatrix() {
+        return matrix;
     }
 
     public Task<T> getTask() {

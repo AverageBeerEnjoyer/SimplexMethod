@@ -73,6 +73,11 @@ public class DoublArithmetic extends Arithmetic<Doubl> {
     }
 
     @Override
+    public Doubl cast(int n) {
+        return new Doubl(n);
+    }
+
+    @Override
     public String toString() {
         return "D";
     }
