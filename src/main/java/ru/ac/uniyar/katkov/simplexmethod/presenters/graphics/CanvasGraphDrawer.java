@@ -8,14 +8,11 @@ import javafx.scene.text.Font;
 import javafx.util.Pair;
 import ru.ac.uniyar.katkov.simplexmethod.math.ConvexHull;
 import ru.ac.uniyar.katkov.simplexmethod.math.Matrix;
-import ru.ac.uniyar.katkov.simplexmethod.math.simplex.table.SimplexTable;
-import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
+import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.GraphicTask;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.ac.uniyar.katkov.simplexmethod.Utils.getlast;
-import static ru.ac.uniyar.katkov.simplexmethod.Utils.pair;
 
 public class CanvasGraphDrawer {
     private final Canvas canvas;
@@ -28,8 +25,8 @@ public class CanvasGraphDrawer {
     private double initInterval;
     private int initIntervalToDraw;
     private final List<Straight> straights = new ArrayList<>();
-    private final List<String> unequals = new ArrayList<>();
-    private Pair<Dot, Dot> antiNormalVector;
+    private Dot antiNormalVector;
+    private Dot solution;
     private String ordinateName = "y";
     private String abscissaName = "x";
 
@@ -50,7 +47,6 @@ public class CanvasGraphDrawer {
     }
 
     private void setGCProperties() {
-        gc.setFill(Color.rgb(117, 227, 104, 0.5));
         gc.setFont(new Font("Verdana", 14));
     }
 
@@ -90,24 +86,11 @@ public class CanvasGraphDrawer {
             drawLine(new Dot(bounds.getMinX(), value), new Dot(bounds.getMaxX(), value));
             drawText("" + value, new Dot(-l, value + l / 10));
         }
-//        for (int i = initIntervalToDraw; i < bounds.getMaxY() || i < bounds.getMaxX() || -i > bounds.getMinX() || -i > bounds.getMinY(); i += initIntervalToDraw) {
-//            if (i < bounds.getMaxX()) {
-//                drawLine(new Dot(i, bounds.getMinY()), new Dot(i, bounds.getMaxY()));
-//                drawText("" + i, new Dot(i + l / 10, -l));
-//            }
-//            if (-i > bounds.getMinX()) {
-//                drawLine(new Dot(-i, bounds.getMinY()), new Dot(-i, bounds.getMaxY()));
-//                drawText("" + (-i), new Dot(-i + l / 10, -l));
-//            }
-//            if (i < bounds.getMaxY()) {
-//                drawLine(new Dot(bounds.getMinX(), i), new Dot(bounds.getMaxX(), i));
-//                drawText("" + i, new Dot(-l, i + l / 10));
-//            }
-//            if (i > bounds.getMinY()) {
-//                drawLine(new Dot(bounds.getMinX(), -i), new Dot(bounds.getMaxX(), -i));
-//                drawText("" + (-i), new Dot(-l, -i + l / 10));
-//            }
-//        }
+    }
+
+    private void drawCircle(Dot center, double radius) {
+        Dot canvasCoords = convertCoordsGraphToCanvas(center);
+        gc.fillOval(canvasCoords.x() - radius, canvasCoords.y() - radius, 2 * radius, 2 * radius);
     }
 
     private void drawLine(Dot d1, Dot d2) {
@@ -140,10 +123,16 @@ public class CanvasGraphDrawer {
 
     public void removeTask() {
         straights.clear();
-        unequals.clear();
         antiNormalVector = null;
+        solution = null;
         abscissaName = "x";
         ordinateName = "y";
+    }
+
+    private void drawSolution() {
+        if (solution == null) return;
+        gc.setFill(Color.BLUE);
+        drawCircle(solution, 3);
     }
 
     private void fillArea() {
@@ -155,6 +144,7 @@ public class CanvasGraphDrawer {
             x[i] = converted.x();
             y[i] = converted.y();
         }
+        gc.setFill(Color.rgb(117, 227, 104, 0.5));
         gc.fillPolygon(x, y, polygonToFill.length);
     }
 
@@ -168,16 +158,17 @@ public class CanvasGraphDrawer {
             drawLine(straight);
         }
         drawAntiNormalVector();
+        drawSolution();
     }
 
     private void drawAntiNormalVector() {
         if (antiNormalVector == null) return;
         gc.setStroke(Color.RED);
         gc.setLineWidth(3);
-        drawLine(antiNormalVector.getKey(), antiNormalVector.getValue());
+        drawLine(new Dot(0,0), antiNormalVector);
         gc.setLineWidth(1);
         gc.setStroke(Color.BLACK);
-        drawText("-n", antiNormalVector.getKey());
+        drawText("-n", antiNormalVector);
     }
 
     private void addStraightsFromMatrix(Matrix<?> matrix) {
@@ -199,53 +190,38 @@ public class CanvasGraphDrawer {
         this.abscissaName = s;
     }
 
-    private void setTaskData(Task<?> task) {
+    private void setTaskData(GraphicTask<?> task) {
         if (task == null) return;
-        if (task.getLimits().columns - task.getLimits().rows != 2) {
-            unequals.add("Can not draw in 2 dimensions");
-            return;
-        }
-        SimplexTable<?> table = getlast(task.getBestSteps());
-        Matrix<?> matrix = table.getCloneMatrix();
+        Matrix<?> matrix = task.getMatrix();
         int[] order = matrix.getOrder();
 
         setAbscissaName("x" + (order[matrix.columns - 1] + 1));
         setOrdinateName("x" + (order[matrix.columns - 2] + 1));
         addStraightsFromMatrix(matrix);
 
-        unequals.addAll(table.getUnequals());
-        unequals.add("Solution:");
-        unequals.addAll(List.of(task.getSolutionString().split("\n")));
-
         countFillArea();
 
-        defineAntiNormalVector(table, matrix);
+        antiNormalVector = task.getAntiNormalVector();
+        this.solution = task.getSolutionDot();
     }
 
-    public void setTask(Task<?> task) {
+    public void setTask(GraphicTask<?> task) {
         removeTask();
         setTaskData(task);
         draw();
     }
 
-    private void defineAntiNormalVector(SimplexTable<?> finalTable, Matrix<?> matrix) {
-        double x = finalTable.getCloneFunc()[matrix.getOrder()[matrix.columns - 1]].doubleValue();
-        double y = finalTable.getCloneFunc()[matrix.getOrder()[matrix.columns - 2]].doubleValue();
-        double length = Math.sqrt(x * x + y * y);
-        Dot d1 = new Dot(-x / length, -y / length);
-        Dot d2 = new Dot(0, 0);
-        antiNormalVector = pair(d1, d2);
-    }
+
 
     public void increaseInitInterval() {
-        Dot center = convertCoordsGraphToCanvas(new Dot(centerX,centerY));
+        Dot center = convertCoordsGraphToCanvas(new Dot(centerX, centerY));
         initInterval *= 1.5;
         if (canvas.getWidth() / initInterval < 10) {
             initInterval /= 1.5;
             return;
         }
-        x0 = center.x() + (x0-center.x())*1.5;
-        y0 = center.y() + (y0-center.y())*1.5;
+        x0 = center.x() + (x0 - center.x()) * 1.5;
+        y0 = center.y() + (y0 - center.y()) * 1.5;
         countBounds();
         countFillArea();
         draw();
@@ -258,8 +234,8 @@ public class CanvasGraphDrawer {
             initInterval *= 1.5;
             return;
         }
-        x0 = center.x() + (x0-center.x())/1.5;
-        y0 = center.y() + (y0-center.y())/1.5;
+        x0 = center.x() + (x0 - center.x()) / 1.5;
+        y0 = center.y() + (y0 - center.y()) / 1.5;
         countBounds();
         countFillArea();
         draw();
@@ -275,9 +251,5 @@ public class CanvasGraphDrawer {
         double x = graphCoords.x() * initInterval + x0;
         double y = y0 - graphCoords.y() * initInterval;
         return new Dot(x, y);
-    }
-
-    public List<String> getUnequals() {
-        return unequals;
     }
 }

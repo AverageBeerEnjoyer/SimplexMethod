@@ -43,7 +43,7 @@ public class TaskTest {
 
         int[] order = new int[]{4, 5, 0, 1, 2, 3};
 
-        return new TaskABM<>(func, new Matrix<>(limits, ext, order));
+        return new TaskABM<>(func, new Matrix<>(limits, ext, order),true);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class TaskTest {
         ext[0] = OF(5, 1);
         ext[1] = OF(1, 1);
 
-        Task<OrdinaryFraction> task = new Task<>(func, new Matrix<>(limits, ext));
+        Task<OrdinaryFraction> task = new Task<>(func, new Matrix<>(limits, ext), true);
         task.solve();
         task.getSolutionString();
     }
@@ -117,7 +117,7 @@ public class TaskTest {
 
         int[] order = new int[]{4, 5, 6, 0, 1, 2, 3};
 
-        TaskABM<OrdinaryFraction> task = new TaskABM<>(func, new Matrix<>(limits, ext, order));
+        TaskABM<OrdinaryFraction> task = new TaskABM<>(func, new Matrix<>(limits, ext, order), true);
         task.solve();
         task.getSolutionString();
     }
@@ -145,5 +145,12 @@ public class TaskTest {
         for (int i = 0; i < 4; ++i) {
             assertEquals(expectedSolution[i],task.getSolution().get(i));
         }
+    }
+
+    @Test
+    void qwe(){
+        System.out.println(-1%4);
+        System.out.println(-6%4);
+        System.out.println(-4%4);
     }
 }

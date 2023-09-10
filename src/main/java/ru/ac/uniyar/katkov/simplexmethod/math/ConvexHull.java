@@ -23,12 +23,14 @@ public class ConvexHull {
             }
             for (int i = 0; i < polygon.length; ++i) {
                 if (values[i] == -1) {
-                    if (values[(i - 1) % values.length] != -1) {
-                        Dot cross = new Straight(polygon[i], polygon[(i - 1) % values.length]).cross(straight);
+                    int prevIndex = ((i - 1) % values.length + values.length) % values.length;
+                    if (values[prevIndex] != -1) {
+                        Dot cross = new Straight(polygon[i], polygon[prevIndex]).cross(straight);
                         newDots.add(cross);
                     }
-                    if (values[(i + 1) % values.length] != -1) {
-                        Dot cross = new Straight(polygon[i], polygon[(i + 1) % values.length]).cross(straight);
+                    int nextIndex = (i + 1) % values.length;
+                    if (values[nextIndex] != -1) {
+                        Dot cross = new Straight(polygon[i], polygon[nextIndex]).cross(straight);
                         newDots.add(cross);
                     }
                 } else {

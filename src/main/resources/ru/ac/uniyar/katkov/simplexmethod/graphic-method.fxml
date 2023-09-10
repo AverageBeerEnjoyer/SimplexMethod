@@ -6,14 +6,33 @@
 
 <SplitPane dividerPositions="0.19583333333333333" prefHeight="160.0" prefWidth="200.0" stylesheets="@css/main-scene.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.ac.uniyar.katkov.simplexmethod.presenters.controllers.GraphicMethodController">
     <items>
-        <VBox prefHeight="766.0" prefWidth="308.0" styleClass="containers">
+        <VBox prefHeight="766.0" prefWidth="140.0" styleClass="containers">
             <children>
                 <HBox styleClass="containers">
                     <children>
+                  <Label text="Scale" />
                         <Button mnemonicParsing="false" onAction="#decreaseGraphScale" text="-" />
                         <Button mnemonicParsing="false" onAction="#increaseGraphScale" text="+" />
                     </children>
                 </HBox>
+            <GridPane fx:id="spinners" disable="true">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Ordinate" />
+                  <Label text="Abscissa" GridPane.rowIndex="1" />
+                  <Spinner fx:id="ordinate" GridPane.columnIndex="1" />
+                  <Spinner fx:id="abscissa" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#update" text="Update" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
                 <VBox fx:id="unequals" prefHeight="200.0" prefWidth="100.0" styleClass="containers" />
             </children>
         </VBox>
