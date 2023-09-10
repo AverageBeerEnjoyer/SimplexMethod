@@ -74,14 +74,20 @@ public class MainSceneController implements Initializable {
         this.task = null;
         this.taskABM = taskABM;
         taskABM.solve();
-        this.task = new Task(taskABM, function);
-        task.solve();
+        try {
+            this.task = new Task(taskABM, function);
+            task.solve();
+        } catch (IllegalArgumentException e) {
+            this.task = null;
+        }
     }
 
     public void display() {
         graphicMethodController.drawTask(task);
         simplexMethodController.setTasks(taskABM, task);
-        inputController.displaySolution(task);
+        if (task != null)
+            inputController.displaySolution(task);
+        else inputController.displaySolution(taskABM);
     }
 
     @FXML
@@ -101,14 +107,14 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void clearTask(){
+    private void clearTask() {
         inputController.clear();
         simplexMethodController.clear();
         graphicMethodController.clear();
     }
 
     @FXML
-    private void help(){
+    private void help() {
         SceneManager.getInstance().getHelpStage().show();
     }
 

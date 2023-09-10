@@ -16,7 +16,8 @@ public class Matrix<T extends Number> implements Cloneable {
     public Matrix(T[][] numbers, T[] extension, int[] order) {
         this.rows = numbers.length;
         this.columns = numbers[0].length;
-        if (isDimensionIncorrect(rows, columns, extension.length)) throw new IllegalArgumentException("incorrect dimension");
+        if (isDimensionIncorrect(rows, columns, extension.length))
+            throw new IllegalArgumentException("incorrect dimension");
         this.ametic = Arithmetic.getArithmeticOfType(extension[0]);
         this.numbers = numbers;
         this.extension = extension;
@@ -26,7 +27,8 @@ public class Matrix<T extends Number> implements Cloneable {
     public Matrix(T[][] numbers, T[] extension) {
         this.rows = numbers.length;
         this.columns = numbers[0].length;
-        if (isDimensionIncorrect(rows, columns, extension.length)) throw new IllegalArgumentException("incorrect dimension");
+        if (isDimensionIncorrect(rows, columns, extension.length))
+            throw new IllegalArgumentException("incorrect dimension");
         this.ametic = Arithmetic.getArithmeticOfType(extension[0]);
         this.numbers = numbers;
         this.extension = extension;
@@ -98,7 +100,7 @@ public class Matrix<T extends Number> implements Cloneable {
 
     public void prepareToABM() {
         for (int i = 0; i < rows; ++i) {
-            if (ametic.compare(extension[i],ametic.zero()) < 0) {
+            if (ametic.compare(extension[i], ametic.zero()) < 0) {
                 multiplyRow(i, ametic.cast(-1));
             }
         }
@@ -139,6 +141,13 @@ public class Matrix<T extends Number> implements Cloneable {
         return order;
     }
 
+    public void setDefaultOrder() {
+        for (int i = 0; i < columns; ++i) {
+            if (order[i] != i)
+                swapColumns(i, order[i]);
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -161,7 +170,7 @@ public class Matrix<T extends Number> implements Cloneable {
         } catch (CloneNotSupportedException | ClassCastException e) {
             throw new AssertionError();
         }
-        T[][] newNumbers =  ametic.empty2DimArray(rows,columns);
+        T[][] newNumbers = ametic.empty2DimArray(rows, columns);
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < columns; ++j) {
                 newNumbers[i][j] = ametic.parse(numbers[i][j].toString());

@@ -3,6 +3,7 @@ package ru.ac.uniyar.katkov.simplexmethod.presenters.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
 import ru.ac.uniyar.katkov.simplexmethod.math.simplex.task.Task;
 import ru.ac.uniyar.katkov.simplexmethod.presenters.factories.LabelsFactory;
@@ -15,13 +16,14 @@ import java.util.ResourceBundle;
 public class GraphicMethodController implements Initializable {
 
     private CanvasGraphDrawer cd;
+    private double dragStartX, dragStartY;
 
     @FXML
     VBox unequals;
     @FXML
     Canvas canvas;
 
-    private void initCanvasDrawer(){
+    private void initCanvasDrawer() {
         cd = new CanvasGraphDrawer(canvas);
     }
 
@@ -40,7 +42,7 @@ public class GraphicMethodController implements Initializable {
         cd.decreaseInitInterval();
     }
 
-    public void clear(){
+    public void clear() {
         unequals.getChildren().clear();
         cd.setTask(null);
     }
@@ -49,8 +51,31 @@ public class GraphicMethodController implements Initializable {
         clear();
         cd.setTask(task);
         List<String> uneq = cd.getUnequals();
-        for(String s:uneq){
+        for (String s : uneq) {
             unequals.getChildren().add(LabelsFactory.l(s));
+        }
+    }
+
+
+    @FXML
+    private void startDrag(MouseEvent event) {
+        dragStartX = event.getX();
+        dragStartY = event.getY();
+    }
+
+    @FXML
+    private void endDrag(MouseEvent event) {
+        cd.move(event.getX() - dragStartX, event.getY() - dragStartY);
+        dragStartX = event.getX();
+        dragStartY = event.getY();
+    }
+
+    @FXML
+    private void zoom(ScrollEvent event) {
+        if (event.getDeltaY() > 0) {
+            cd.increaseInitInterval();
+        } else {
+            cd.decreaseInitInterval();
         }
     }
 }

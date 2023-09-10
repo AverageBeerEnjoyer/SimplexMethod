@@ -19,7 +19,7 @@
         </VBox>
         <Pane prefHeight="746.0" prefWidth="1321.0" styleClass="beer-vibe">
             <children>
-                <Canvas fx:id="canvas" height="746.0" width="1154.0" />
+                <Canvas fx:id="canvas" height="746.0" onMouseDragged="#endDrag" onMousePressed="#startDrag" onScroll="#zoom" width="1154.0" />
             </children>
         </Pane>
     </items>

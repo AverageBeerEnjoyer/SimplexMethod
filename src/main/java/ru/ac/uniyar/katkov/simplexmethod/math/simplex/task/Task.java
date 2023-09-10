@@ -39,7 +39,7 @@ public class Task<T extends Number> {
         this.targetFunction = targetFunction;
         this.min = min;
         if (!(this instanceof TaskABM) && !min) {
-            reversTargetFunction();
+            revertTargetFunction();
         }
     }
 
@@ -60,7 +60,7 @@ public class Task<T extends Number> {
         defineCondition();
     }
 
-    private void reversTargetFunction() {
+    private void revertTargetFunction() {
         for (int i = 0; i < targetFunction.length; ++i) {
             targetFunction[i] = ametic.revert(targetFunction[i]);
         }

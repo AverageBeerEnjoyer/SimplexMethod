@@ -30,9 +30,8 @@ public class SimplexMethodController implements Initializable {
     private VBox forTask;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {}
-
-
+    public void initialize(URL location, ResourceBundle resources) {
+    }
 
 
     private void clearLayoutSince(GridPane table) {
@@ -41,14 +40,14 @@ public class SimplexMethodController implements Initializable {
     }
 
     public boolean nextTable(Pair<Integer, Integer> swap, SimplexTable<? extends Number> table, GridPane gridPane) {
-        if (table.getCondition() != SimplexTableCondition.NOT_FINAL){
+        if (table.getCondition() != SimplexTableCondition.NOT_FINAL) {
             return false;
         }
 
         SimplexTable<? extends Number> newTable;
         try {
             newTable = table.next(swap);
-        } catch (ArithmeticException e){
+        } catch (ArithmeticException e) {
             Alerts.showError(e.getMessage());
             return false;
         }
@@ -57,10 +56,10 @@ public class SimplexMethodController implements Initializable {
         task1.removeStepsSince(newTable);
 
         forTask.getChildren().add(SimplexTableViewFactory.createSimplexTableView(newTable, this));
-        if(newTable.getCondition()!=SimplexTableCondition.NOT_FINAL){
+        if (newTable.getCondition() != SimplexTableCondition.NOT_FINAL) {
 
             forTask.getChildren().add(LabelsFactory.beerL(task1.getSolutionString()));
-            if(taskABM==task1 && task1.getCondition()== TaskCondition.HAS_SOLUTION){
+            if (taskABM == task1 && task1.getCondition() == TaskCondition.HAS_SOLUTION) {
                 displayTask(task);
             }
         }
@@ -68,14 +67,14 @@ public class SimplexMethodController implements Initializable {
     }
 
     public void setTasks(TaskABM<? extends Number> taskABM, Task<? extends Number> task) {
-        if (task == null) return;
         clear();
         this.taskABM = taskABM;
         this.task = task;
         if (taskABM != null) {
             displayTask(taskABM);
         }
-        displayTask(task);
+        if (task != null)
+            displayTask(task);
     }
 
     public void displayTask(Task<? extends Number> task) {
